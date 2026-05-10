@@ -34,32 +34,16 @@ _ROCKYOU_CANDIDATES = [
     Path(__file__).parents[3] / "datasets" / "rockyou.txt",
 ]
 
-# Built-in wordlist — common passwords ordered by frequency
-_BUILTIN_WORDLIST = [
-    "password", "123456", "12345678", "qwerty", "abc123",
-    "letmein", "monkey", "1234567", "111111", "dragon",
-    "baseball", "iloveyou", "master", "sunshine", "ashley",
-    "password1", "princess", "football", "shadow", "batman",
-    "michael", "123123", "654321", "superman", "donald",
-    "pass", "login", "admin", "root", "test",
-    "1234", "12345", "000000", "qwerty123", "aaaaaa",
-    "password123", "welcome", "passw0rd", "access", "ninja",
-    "charlie1", "michael1", "jessica1", "thomas1", "sarah1",
-    "spring2024", "winter2024", "summer23", "fall2023",
-    "mypassword", "mypass123", "hello123", "computer1",
-    "sunshine1", "orange123", "purple123", "green456",
-    "starwars1", "pokemon1", "minecraft1", "fortnite1",
-    "guitar123", "music123", "soccer123", "hockey123",
-    "dog12345", "cat12345", "fish1234", "bird1234",
-    "Hunter2!", "Ranger9$", "Falcon7#", "Raptor6@",
-    "Password!1", "Welcome!1", "Security1!", "Admin2024!",
+
 def _build_augmented_wordlist() -> list[str]:
     """
     Build an augmented wordlist that mirrors the dataset generator's
     _load_fallback_passwords() augmentation logic, so the dictionary attack
     can crack all passwords in the generated dataset.
+
+    This MUST stay in sync with dataset_generator._FALLBACK_PASSWORDS
+    and the suffix augmentation logic in _load_fallback_passwords().
     """
-    # Full base corpus from dataset_generator — must stay in sync
     _BASE_CORPUS = [
         # Trivial
         "password", "123456", "12345678", "qwerty", "abc123",
@@ -92,7 +76,7 @@ def _build_augmented_wordlist() -> list[str]:
         "Football2!", "Baseball3#", "Basketball4@", "Soccer5$",
         "John@doe123", "Jane#doe456", "Alice$789!!", "Bob%123!!",
         "Smile2day!", "Love4life#", "Hope4ever@", "Faith2024$",
-        # Strong
+        # Strong (high entropy)
         "Tr0ub4dor&3", "correcthorsebatterystaple",
         "xK9#mP2$vL8@nQ5", "R7$tY2!wZ4#bN6@",
         "Hj8&Kp3!Lm5@Nx", "Qr9$St2#Uv4%Wx",
@@ -110,7 +94,7 @@ def _build_augmented_wordlist() -> list[str]:
         "ResearchData!2024@#$", "PasswordStudy!#Complex",
     ]
 
-    base = list(dict.fromkeys(_BASE_CORPUS))   # deduplicate, preserve order
+    base = list(dict.fromkeys(_BASE_CORPUS))  # deduplicate, preserve order
     result = list(base)
 
     # Replicate the exact augmentation logic from dataset_generator.py
@@ -133,12 +117,14 @@ def _build_augmented_wordlist() -> list[str]:
     return unique
 
 
-_AUGMENTED_WORDLIST: list[str] = []   # lazily built on first use
+_AUGMENTED_WORDLIST: list[str] = []  # lazily built on first use
 
 
 def _load_wordlist(max_words: int = 50_000) -> list[str]:
     """
-    Load the wordlist. Prefers rockyou.txt if found.
+    Load the wordlist. Prefers rockyou.txt if found, otherwise uses an
+    augmented built-in wordlist that mirrors the dataset generator's
+    password corpus — ensuring accurate attack success rates.
 
     Args:
         max_words: Cap on words loaded (avoids memory exhaustion)
@@ -171,7 +157,6 @@ def _load_wordlist(max_words: int = 50_000) -> list[str]:
     return _AUGMENTED_WORDLIST
 
 
-
 # ---------------------------------------------------------------------------
 # Dictionary Attack implementation
 # ---------------------------------------------------------------------------
@@ -181,7 +166,7 @@ class DictionaryAttack(BaseAttack):
     Dictionary Attack: hash each word and compare against stored hashes.
 
     Attack flow:
-      1. Load wordlist (rockyou.txt preferred)
+      1. Load wordlist (rockyou.txt preferred, augmented built-in fallback)
       2. For each target hash, iterate words until match found or list exhausted
       3. Record crack time, attempt count, success rate
 
@@ -249,7 +234,6 @@ class DictionaryAttack(BaseAttack):
 
             target_hash = target.hash_value
             target_salt = target.salt
-            cracked_this = False
 
             crack_start = time.perf_counter()
             for word in words:
@@ -265,7 +249,6 @@ class DictionaryAttack(BaseAttack):
                             crack_time_ms  = round(crack_ms, 4),
                             attempt_number = total_attempts,
                         ))
-                        cracked_this = True
                         break
                 except Exception:
                     pass
