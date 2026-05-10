@@ -28,13 +28,15 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 ALGORITHM_PROPERTIES = {
-    "plaintext"     : {"salted": False, "memory_hard": False, "speed_class": "instant",   "baseline_score": 0},
-    "md5"           : {"salted": False, "memory_hard": False, "speed_class": "fast",      "baseline_score": 5},
-    "sha1"          : {"salted": False, "memory_hard": False, "speed_class": "fast",      "baseline_score": 8},
-    "sha256"        : {"salted": False, "memory_hard": False, "speed_class": "fast",      "baseline_score": 12},
-    "salted_sha256" : {"salted": True,  "memory_hard": False, "speed_class": "fast",      "baseline_score": 35},
-    "bcrypt"        : {"salted": True,  "memory_hard": False, "speed_class": "slow",      "baseline_score": 75},
-    "argon2id"      : {"salted": True,  "memory_hard": True,  "speed_class": "slow",      "baseline_score": 90},
+    # baseline_crack_rate: theoretical % of passwords crackable in a realistic attack
+    # (used when no actual attack data is available yet)
+    "plaintext"     : {"salted": False, "memory_hard": False, "speed_class": "instant", "baseline_score": 0,  "baseline_crack_rate": 100.0},
+    "md5"           : {"salted": False, "memory_hard": False, "speed_class": "fast",    "baseline_score": 5,  "baseline_crack_rate": 95.0},
+    "sha1"          : {"salted": False, "memory_hard": False, "speed_class": "fast",    "baseline_score": 8,  "baseline_crack_rate": 90.0},
+    "sha256"        : {"salted": False, "memory_hard": False, "speed_class": "fast",    "baseline_score": 12, "baseline_crack_rate": 85.0},
+    "salted_sha256" : {"salted": True,  "memory_hard": False, "speed_class": "fast",    "baseline_score": 35, "baseline_crack_rate": 40.0},
+    "bcrypt"        : {"salted": True,  "memory_hard": False, "speed_class": "slow",    "baseline_score": 75, "baseline_crack_rate": 2.0},
+    "argon2id"      : {"salted": True,  "memory_hard": True,  "speed_class": "slow",    "baseline_score": 90, "baseline_crack_rate": 0.0},
 }
 
 
@@ -112,18 +114,19 @@ def calculate_score(
     })
 
     if not reports:
-        # No attack data — use baseline score from known properties
-        score = props["baseline_score"]
+        # No attack data — use baseline score and theoretical crack rate
+        score            = props["baseline_score"]
+        baseline_crack   = props.get("baseline_crack_rate", 0.0)
         return AlgorithmScore(
             algorithm       = algorithm,
             score           = score,
             grade           = _grade(score),
             tier            = _tier(score, algorithm),
-            crack_rate_pct  = 0.0,
+            crack_rate_pct  = baseline_crack,
             avg_time_sec    = 0.0,
             is_salted       = props["salted"],
             is_memory_hard  = props["memory_hard"],
-            recommendations = _build_recommendations(algorithm, score, 0.0),
+            recommendations = _build_recommendations(algorithm, score, baseline_crack),
             attack_breakdown= {},
         )
 
