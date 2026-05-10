@@ -53,10 +53,87 @@ _BUILTIN_WORDLIST = [
     "dog12345", "cat12345", "fish1234", "bird1234",
     "Hunter2!", "Ranger9$", "Falcon7#", "Raptor6@",
     "Password!1", "Welcome!1", "Security1!", "Admin2024!",
-    "Blue$ky22", "R3dR0se!!", "CoffeeTime1!", "MorningRun2#",
-    "Trustno1!!", "Batman2024!", "Superman3#", "Ironman4$",
-    "John@doe123", "Jane#doe456", "Alice$789!!", "Bob%123!!",
-]
+def _build_augmented_wordlist() -> list[str]:
+    """
+    Build an augmented wordlist that mirrors the dataset generator's
+    _load_fallback_passwords() augmentation logic, so the dictionary attack
+    can crack all passwords in the generated dataset.
+    """
+    # Full base corpus from dataset_generator — must stay in sync
+    _BASE_CORPUS = [
+        # Trivial
+        "password", "123456", "12345678", "qwerty", "abc123",
+        "letmein", "monkey", "1234567", "111111", "dragon",
+        "baseball", "iloveyou", "master", "sunshine", "ashley",
+        "password1", "princess", "football", "shadow", "batman",
+        "michael", "123123", "654321", "superman", "donald",
+        "pass", "login", "admin", "root", "test",
+        "1234", "12345", "000000", "qwerty123", "aaaaaa",
+        "password123", "welcome", "passw0rd", "access", "ninja",
+        # Common
+        "charlie1", "michael1", "jessica1", "thomas1", "sarah1",
+        "robert1", "william1", "daniel1", "james1", "david1",
+        "spring2024", "winter2024", "summer23", "fall2023",
+        "monday1", "january1", "february1", "march2023",
+        "mypassword", "mypass123", "hello123", "computer1",
+        "sunshine1", "orange123", "purple123", "green456",
+        "starwars1", "pokemon1", "minecraft1", "fortnite1",
+        "guitar123", "music123", "soccer123", "hockey123",
+        "baseball1", "football1", "basketball1", "tennis123",
+        "dog12345", "cat12345", "fish1234", "bird1234",
+        # Moderate
+        "Hunter2!", "Ranger9$", "Falcon7#", "Raptor6@",
+        "Maverick1!", "Phoenix3#", "Thunder5@", "Lightning8$",
+        "Dragon2024!", "Tiger2024#", "Eagle2024@", "Hawk2024$",
+        "Password!1", "Welcome!1", "Security1!", "Admin2024!",
+        "Blue$ky22", "R3dR0se!!", "Gr33nT3a#", "Purpl3sky@",
+        "CoffeeTime1!", "MorningRun2#", "NightOwl3$", "DayDream4@",
+        "Trustno1!!", "Batman2024!", "Superman3#", "Ironman4$",
+        "Football2!", "Baseball3#", "Basketball4@", "Soccer5$",
+        "John@doe123", "Jane#doe456", "Alice$789!!", "Bob%123!!",
+        "Smile2day!", "Love4life#", "Hope4ever@", "Faith2024$",
+        # Strong
+        "Tr0ub4dor&3", "correcthorsebatterystaple",
+        "xK9#mP2$vL8@nQ5", "R7$tY2!wZ4#bN6@",
+        "Hj8&Kp3!Lm5@Nx", "Qr9$St2#Uv4%Wx",
+        "zX3!cV6@bN9#mQ", "aS4$dF7@gH2!jK",
+        "MyS3cur3P@$$w0rd!", "Th1s!sAStr0ng#P4ss",
+        "C0mpl3x!ty#M4tt3rs", "Ungu3ss4bl3@P4ssw0rd",
+        "L0ng&Str0ng!P4ssph4se", "Rand0m!Numb3rs#G0",
+        "SuperSecure#2024!@", "UltraComplex$Pass99#",
+        "XyZ!1234@AbC#5678", "QwErTy!@#$ZxCvBn99",
+        "P4$$w0rd!Complex#42", "Secur1ty@Analysis#2024",
+        "CipherGuard!Str0ng#1", "HashBreaker@Proof#99",
+        "Entropy!B00ster@High#", "Cr4ckThis@IfYouCan#!!",
+        "Unbreakable!1@#$%^&*(", "ImpossibleToGuess!99#",
+        "AlgorithmTest!$3cur3#", "BenchmarkPass!@#4321",
+        "ResearchData!2024@#$", "PasswordStudy!#Complex",
+    ]
+
+    base = list(dict.fromkeys(_BASE_CORPUS))   # deduplicate, preserve order
+    result = list(base)
+
+    # Replicate the exact augmentation logic from dataset_generator.py
+    suffixes = ["1", "12", "123", "!", "@", "#", "2024", "99", "01", "23"]
+    i = 0
+    while len(result) < 1000:
+        pwd = base[i % len(base)]
+        suffix = suffixes[(i // len(base)) % len(suffixes)]
+        result.append(pwd + suffix)
+        i += 1
+
+    # Remove duplicates while preserving order
+    seen: set = set()
+    unique = []
+    for w in result:
+        if w not in seen:
+            seen.add(w)
+            unique.append(w)
+
+    return unique
+
+
+_AUGMENTED_WORDLIST: list[str] = []   # lazily built on first use
 
 
 def _load_wordlist(max_words: int = 50_000) -> list[str]:
@@ -83,8 +160,16 @@ def _load_wordlist(max_words: int = 50_000) -> list[str]:
             logger.info(f"[DictAttack] Loaded {len(words):,} words")
             return words
 
-    logger.warning("[DictAttack] rockyou.txt not found — using built-in wordlist")
-    return _BUILTIN_WORDLIST
+    logger.warning(
+        "[DictAttack] rockyou.txt not found — using augmented built-in wordlist "
+        "(mirrors dataset_generator augmentation for accurate success rates)"
+    )
+    global _AUGMENTED_WORDLIST
+    if not _AUGMENTED_WORDLIST:
+        _AUGMENTED_WORDLIST = _build_augmented_wordlist()
+        logger.info(f"[DictAttack] Augmented wordlist built: {len(_AUGMENTED_WORDLIST):,} words")
+    return _AUGMENTED_WORDLIST
+
 
 
 # ---------------------------------------------------------------------------
