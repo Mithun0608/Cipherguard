@@ -1,0 +1,148 @@
+{
+  "run_id": "224c8e0d-e683-4c80-9a1d-5a5701c2fe97",
+  "timestamp": "2026-05-10T12:38:59.046344+00:00",
+  "attack_type": "rainbow_table",
+  "algorithm": "md5",
+  "config": {
+    "max_attempts": 100000,
+    "timeout_sec": 30.0,
+    "target_limit": 50,
+    "target_count": 50
+  },
+  "results": {
+    "target_count": 50,
+    "cracked_count": 28,
+    "success_rate_pct": 56.0,
+    "total_time_sec": 0.0001,
+    "total_attempts": 50,
+    "attempts_per_sec": 490196.26,
+    "avg_crack_time_ms": 0.0001,
+    "max_crack_time_ms": 0.0002,
+    "wordlist_size": 89,
+    "stopped_early": false,
+    "notes": "Table built in 0.4 ms | 89 precomputed hashes | Lookup is O(1) — instant per hash."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 10,
+      "plain_password": "orange123",
+      "crack_time_ms": 0.0002,
+      "attempt_number": 3
+    },
+    {
+      "record_id": 14,
+      "plain_password": "hockey123",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 4
+    },
+    {
+      "record_id": 26,
+      "plain_password": "sunshine",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 7
+    },
+    {
+      "record_id": 34,
+      "plain_password": "purple123",
+      "crack_time_ms": 0.0002,
+      "attempt_number": 9
+    },
+    {
+      "record_id": 50,
+      "plain_password": "superman",
+      "crack_time_ms": 0.0002,
+      "attempt_number": 13
+    },
+    {
+      "record_id": 54,
+      "plain_password": "qwerty",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 14
+    },
+    {
+      "record_id": 66,
+      "plain_password": "soccer123",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 17
+    },
+    {
+      "record_id": 70,
+      "plain_password": "iloveyou",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 18
+    },
+    {
+      "record_id": 78,
+      "plain_password": "Raptor6@",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 20
+    },
+    {
+      "record_id": 82,
+      "plain_password": "minecraft1",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 21
+    },
+    {
+      "record_id": 86,
+      "plain_password": "Superman3#",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 22
+    },
+    {
+      "record_id": 90,
+      "plain_password": "test",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 23
+    },
+    {
+      "record_id": 94,
+      "plain_password": "fortnite1",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 24
+    },
+    {
+      "record_id": 98,
+      "plain_password": "cat12345",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 25
+    },
+    {
+      "record_id": 102,
+      "plain_password": "passw0rd",
+      "crack_time_ms": 0.0002,
+      "attempt_number": 26
+    },
+    {
+      "record_id": 106,
+      "plain_password": "Password!1",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 27
+    },
+    {
+      "record_id": 114,
+      "plain_password": "12345",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 29
+    },
+    {
+      "record_id": 118,
+      "plain_password": "Ranger9$",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 30
+    },
+    {
+      "record_id": 122,
+      "plain_password": "111111",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 31
+    },
+    {
+      "record_id": 130,
+      "plain_password": "batman",
+      "crack_time_ms": 0.0001,
+      "attempt_number": 33
+    }
+  ],
+  "total_cracked_full": 28
+}

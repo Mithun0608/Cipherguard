@@ -1,0 +1,27 @@
+{
+  "run_id": "4e0eccbe-6420-49a8-8a19-3f19d93e643f",
+  "timestamp": "2026-05-10T12:38:27.806741+00:00",
+  "attack_type": "brute_force",
+  "algorithm": "plaintext",
+  "config": {
+    "max_attempts": 5000,
+    "timeout_sec": 15.0,
+    "target_limit": 20,
+    "target_count": 20
+  },
+  "results": {
+    "target_count": 20,
+    "cracked_count": 0,
+    "success_rate_pct": 0.0,
+    "total_time_sec": 0.0645,
+    "total_attempts": 5000,
+    "attempts_per_sec": 77547.51,
+    "avg_crack_time_ms": 0.0,
+    "max_crack_time_ms": 0.0,
+    "wordlist_size": 5000,
+    "stopped_early": true,
+    "notes": "Charset: 36 chars | Length range: 1-5 | Theoretical space: 62,193,780 | Stopped early."
+  },
+  "cracked_sample": [],
+  "total_cracked_full": 0
+}

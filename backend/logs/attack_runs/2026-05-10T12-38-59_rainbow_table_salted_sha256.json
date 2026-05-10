@@ -1,0 +1,27 @@
+{
+  "run_id": "cffd8a12-84e6-4edb-8364-3961cbcffa9e",
+  "timestamp": "2026-05-10T12:38:59.075922+00:00",
+  "attack_type": "rainbow_table",
+  "algorithm": "salted_sha256",
+  "config": {
+    "max_attempts": 100000,
+    "timeout_sec": 30.0,
+    "target_limit": 50,
+    "target_count": 50
+  },
+  "results": {
+    "target_count": 50,
+    "cracked_count": 0,
+    "success_rate_pct": 0.0,
+    "total_time_sec": 0.001,
+    "total_attempts": 0,
+    "attempts_per_sec": 0.0,
+    "avg_crack_time_ms": 0.0,
+    "max_crack_time_ms": 0.0,
+    "wordlist_size": 0,
+    "stopped_early": false,
+    "notes": "Rainbow table attack FAILED as expected against 'salted_sha256'. Per-password salting prevents precomputed lookup tables. Each password has a unique salt, requiring a separate table per salt — computationally infeasible."
+  },
+  "cracked_sample": [],
+  "total_cracked_full": 0
+}

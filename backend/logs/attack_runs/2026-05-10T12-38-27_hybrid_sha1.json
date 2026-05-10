@@ -1,0 +1,40 @@
+{
+  "run_id": "97cf55ad-1cd8-4229-ae72-dcf76bce9afc",
+  "timestamp": "2026-05-10T12:38:27.719739+00:00",
+  "attack_type": "hybrid",
+  "algorithm": "sha1",
+  "config": {
+    "max_attempts": 15000,
+    "timeout_sec": 20.0,
+    "target_limit": 50,
+    "target_count": 50
+  },
+  "results": {
+    "target_count": 50,
+    "cracked_count": 2,
+    "success_rate_pct": 4.0,
+    "total_time_sec": 0.0365,
+    "total_attempts": 15043,
+    "attempts_per_sec": 411968.81,
+    "avg_crack_time_ms": 0.0072,
+    "max_crack_time_ms": 0.0122,
+    "wordlist_size": 4005,
+    "stopped_early": true,
+    "notes": "Base words: 89 | Rules: 13 | Est candidates: 4,005 | Top cracking rules: [_rule_identity=2] | Stopped early."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 43,
+      "plain_password": "123456",
+      "crack_time_ms": 0.0122,
+      "attempt_number": 2261
+    },
+    {
+      "record_id": 35,
+      "plain_password": "monkey",
+      "crack_time_ms": 0.0022,
+      "attempt_number": 12795
+    }
+  ],
+  "total_cracked_full": 2
+}

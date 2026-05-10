@@ -1,0 +1,52 @@
+{
+  "run_id": "82aa2fe8-77b5-4115-bb6a-9985b3558cd2",
+  "timestamp": "2026-05-10T12:38:59.124871+00:00",
+  "attack_type": "hybrid",
+  "algorithm": "sha1",
+  "config": {
+    "max_attempts": 15000,
+    "timeout_sec": 20.0,
+    "target_limit": 50,
+    "target_count": 50
+  },
+  "results": {
+    "target_count": 50,
+    "cracked_count": 4,
+    "success_rate_pct": 8.0,
+    "total_time_sec": 0.0343,
+    "total_attempts": 15005,
+    "attempts_per_sec": 437591.13,
+    "avg_crack_time_ms": 0.0022,
+    "max_crack_time_ms": 0.0025,
+    "wordlist_size": 4005,
+    "stopped_early": true,
+    "notes": "Base words: 89 | Rules: 13 | Est candidates: 4,005 | Top cracking rules: [_rule_identity=2, _rule_leet_basic=1, _rule_mixed_case_symbol=1] | Stopped early."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 103,
+      "plain_password": "passw0rd",
+      "crack_time_ms": 0.0025,
+      "attempt_number": 1226
+    },
+    {
+      "record_id": 107,
+      "plain_password": "Password!1",
+      "crack_time_ms": 0.0021,
+      "attempt_number": 2109
+    },
+    {
+      "record_id": 179,
+      "plain_password": "12345678",
+      "crack_time_ms": 0.0021,
+      "attempt_number": 4287
+    },
+    {
+      "record_id": 55,
+      "plain_password": "qwerty",
+      "crack_time_ms": 0.0022,
+      "attempt_number": 6186
+    }
+  ],
+  "total_cracked_full": 4
+}
