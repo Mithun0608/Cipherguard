@@ -57,6 +57,10 @@ class RunAttackRequest(BaseModel):
         default=True,
         description="Persist result to attack_results table",
     )
+    demo_mode   : bool = Field(
+        default=False,
+        description="Use short demo passwords for brute force (guarantees successful cracking demonstration)",
+    )
 
     @field_validator("attack_type")
     @classmethod
@@ -93,23 +97,29 @@ class AttackBreakdownItem(BaseModel):
 
 class RunAttackResponse(BaseModel):
     """Response body returned after attack simulation."""
-    run_id             : str
-    attack_type        : str
-    algorithm          : str
-    target_count       : int
-    cracked_count      : int
-    success_rate_pct   : float
-    total_time_sec     : float
-    total_attempts     : int
-    attempts_per_sec   : float
-    avg_crack_time_ms  : float
-    max_crack_time_ms  : float
-    wordlist_size      : int
-    stopped_early      : bool
-    notes              : str
-    cracked_sample     : list[CrackedPasswordOut]
-    security_tier_note : str   # narrative about why this algorithm succeeded/failed
-    saved_to_db        : bool
+    run_id              : str
+    attack_type         : str
+    algorithm           : str
+    target_count        : int
+    cracked_count       : int
+    success_rate_pct    : float
+    total_time_sec      : float
+    total_attempts      : int
+    attempts_per_sec    : float
+    avg_crack_time_ms   : float
+    max_crack_time_ms   : float
+    wordlist_size       : int
+    stopped_early       : bool
+    notes               : str
+    cracked_sample      : list[CrackedPasswordOut]
+    security_tier_note  : str   # scientifically accurate narrative about this result
+    saved_to_db         : bool
+    # Extended analytics fields
+    attack_interpretation : str = ""     # per-algorithm + per-scenario explanation
+    search_space_info     : str = ""     # e.g. "36^5 = 60,466,176 combinations"
+    gpu_crack_estimate    : str = ""     # estimated GPU crack time
+    owasp_status          : str = ""     # OWASP recommendation status
+    timeout_note          : str = ""     # clarification when stopped_early=True
 
 
 # ---------------------------------------------------------------------------

@@ -9,6 +9,7 @@ import SaltingVisualizer from './pages/SaltingVisualizer'
 import BreachSimulator from './pages/BreachSimulator'
 import LogsReports from './pages/LogsReports'
 import Settings from './pages/Settings'
+import LiveAttack from './pages/LiveAttack'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard"    element={<Dashboard />} />
           <Route path="experiment"   element={<ExperimentRunner />} />
+          <Route path="live-attack"  element={<LiveAttack />} />
           <Route path="attacks"      element={<AttackAnalysis />} />
           <Route path="algorithms"   element={<AlgorithmComparison />} />
           <Route path="scorecard"    element={<SecurityScorecard />} />

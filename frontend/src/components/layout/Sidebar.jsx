@@ -4,13 +4,14 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, FlaskConical, Swords, GitCompare,
   ShieldCheck, Layers, Radiation, FileText, Settings,
-  ChevronLeft, ChevronRight, Shield, Menu, X
+  ChevronLeft, ChevronRight, Shield, Menu, X, Radio
 } from 'lucide-react'
 
 const NAV = [
-  { to: '/dashboard',  icon: LayoutDashboard, label: 'Dashboard',        sub: 'Mission Control',   color: 'cyan' },
-  { to: '/experiment', icon: FlaskConical,     label: 'Experiment',       sub: 'Attack Runner',     color: 'purple' },
-  { to: '/attacks',    icon: Swords,           label: 'Attack Analysis',  sub: 'Deep Dive',         color: 'red' },
+  { to: '/dashboard',   icon: LayoutDashboard, label: 'Dashboard',        sub: 'Mission Control',   color: 'cyan' },
+  { to: '/experiment',  icon: FlaskConical,    label: 'Experiment',       sub: 'Attack Runner',     color: 'purple' },
+  { to: '/live-attack', icon: Radio,           label: 'Live Attack',      sub: 'Real-Time View',    color: 'red' },
+  { to: '/attacks',     icon: Swords,          label: 'Attack Analysis',  sub: 'Deep Dive',         color: 'red' },
   { to: '/algorithms', icon: GitCompare,       label: 'Algorithms',       sub: 'Comparison',        color: 'cyan' },
   { to: '/scorecard',  icon: ShieldCheck,      label: 'Scorecard',        sub: 'Security Rank',     color: 'green' },
   { to: '/salting',    icon: Layers,           label: 'Salting',          sub: 'Visualizer',        color: 'purple' },

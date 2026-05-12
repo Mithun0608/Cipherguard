@@ -211,6 +211,36 @@ class DictionaryAttack(BaseAttack):
         Returns:
             AttackReport with full metrics
         """
+        # ── Plaintext instant compromise ────────────────────────────────────
+        # Plaintext passwords are directly readable — no hashing needed.
+        if algorithm == "plaintext":
+            attack_start = time.perf_counter()
+            cracked = []
+            for target in targets:
+                cracked.append(CrackedPassword(
+                    record_id      = target.id,
+                    algorithm      = "plaintext",
+                    plain_password = target.hash_value,  # hash_value IS the password
+                    stored_hash    = target.hash_value,
+                    crack_time_ms  = 0.001,
+                    attempt_number = len(cracked) + 1,
+                ))
+            total_time = time.perf_counter() - attack_start
+            return self._make_report(
+                algorithm      = "plaintext",
+                target_count   = len(targets),
+                cracked        = cracked,
+                total_attempts = len(targets),
+                total_time_sec = max(total_time, 0.001),
+                wordlist_size  = 0,
+                stopped_early  = False,
+                notes          = (
+                    "INSTANTLY COMPROMISED: Plaintext passwords require zero cracking effort. "
+                    "Direct database read exposes every password immediately. "
+                    "100% of accounts compromised upon any database breach."
+                ),
+            )
+
         hasher        = get_hasher(algorithm)
         words         = self.wordlist
         cracked       : list[CrackedPassword] = []

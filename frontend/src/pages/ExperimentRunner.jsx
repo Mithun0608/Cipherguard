@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Play, RefreshCw, Cpu, Zap, FlaskConical, Target,
   Shield, AlertTriangle, CheckCircle, Clock, Hash, Settings,
-  ChevronDown, Info
+  ChevronDown, Info, ToggleLeft, ToggleRight, Search, Globe
 } from 'lucide-react'
 import Terminal, { useTerminal } from '../components/ui/Terminal'
 import { Badge, RiskBadge } from '../components/ui/Badges'
@@ -16,7 +16,7 @@ const ALGORITHMS = [
   { id: 'sha1',          label: 'SHA-1',         tier: 'weak',     desc: 'Deprecated — rainbow tables' },
   { id: 'sha256',        label: 'SHA-256',       tier: 'weak',     desc: 'Fast — no key stretching' },
   { id: 'salted_sha256', label: 'Salted SHA-256',tier: 'moderate', desc: 'Salt adds rainbow resistance' },
-  { id: 'bcrypt',        label: 'bcrypt',        tier: 'strong',   desc: 'Cost factor — memory hard' },
+  { id: 'bcrypt',        label: 'bcrypt',        tier: 'strong',   desc: 'Cost factor — adaptive slow' },
   { id: 'argon2id',      label: 'Argon2id',      tier: 'strong',   desc: 'Winner PHC — GPU resistant' },
 ]
 
@@ -40,6 +40,9 @@ const ATK_COLORS = {
   yellow: { border: 'border-yellow-400/50',   bg: 'bg-yellow-400/10',   text: 'text-yellow-400'   },
   orange: { border: 'border-orange-400/50',   bg: 'bg-orange-400/10',   text: 'text-orange-400'   },
 }
+
+// Algorithms where timeout does NOT imply security
+const TIMEOUT_VULNERABLE_ALGOS = new Set(['plaintext', 'md5', 'sha1', 'sha256', 'salted_sha256'])
 
 function AlgoButton({ algo, selected, onClick }) {
   const t = TIER_STYLES[algo.tier]
@@ -97,12 +100,23 @@ function AttackButton({ attack, selected, onClick }) {
   )
 }
 
+function InfoRow({ label, value, color = 'text-cyber-text' }) {
+  if (!value) return null
+  return (
+    <div className="flex items-start gap-2 py-1.5 border-b border-cyber-border/15 last:border-0">
+      <span className="text-[10px] font-mono text-cyber-muted flex-shrink-0 w-28 pt-0.5">{label}</span>
+      <span className={`text-[11px] font-mono flex-1 leading-snug ${color}`}>{value}</span>
+    </div>
+  )
+}
+
 export default function ExperimentRunner() {
   const [algo,        setAlgo]        = useState('md5')
   const [attack,      setAttack]      = useState('dictionary')
   const [limit,       setLimit]       = useState(30)
-  const [maxAttempts, setMaxAttempts] = useState(20000)
-  const [timeout,     _setTimeout]    = useState(20)
+  const [maxAttempts, setMaxAttempts] = useState(500000)
+  const [timeout,     _setTimeout]    = useState(30)
+  const [demoMode,    setDemoMode]    = useState(false)
   const [running,     setRunning]     = useState(false)
   const [result,      setResult]      = useState(null)
   const [progress,    setProgress]    = useState(0)
@@ -110,6 +124,11 @@ export default function ExperimentRunner() {
 
   const selectedAlgo = ALGORITHMS.find(a => a.id === algo)
   const tier = TIER_STYLES[selectedAlgo?.tier || 'weak']
+  const isBruteForce = attack === 'brute_force'
+
+  // Determine if result shows a real timeout warning (not just bcrypt/argon2id resistance)
+  const isTimeoutVulnerable = TIMEOUT_VULNERABLE_ALGOS.has(algo)
+  const showTimeoutWarning  = result?.stopped_early && result?.cracked_count === 0 && isTimeoutVulnerable
 
   const runExperiment = async () => {
     setRunning(true); setResult(null); setProgress(0)
@@ -118,6 +137,9 @@ export default function ExperimentRunner() {
     term.add(`║  Algorithm  : ${algo.padEnd(20)}║`, 'dim')
     term.add(`║  Attack     : ${attack.padEnd(20)}║`, 'dim')
     term.add(`║  Targets    : ${String(limit).padEnd(20)}║`, 'dim')
+    if (isBruteForce) {
+      term.add(`║  Demo Mode  : ${String(demoMode).padEnd(20)}║`, demoMode ? 'success' : 'dim')
+    }
     term.add(`╚══════════════════════════════════════╝`, 'cyan')
     term.sep()
     term.add('Initialising attack engine...', 'cyan')
@@ -125,22 +147,47 @@ export default function ExperimentRunner() {
     term.add('Loading target hashes from database...', 'default')
     setProgress(30)
 
+    if (algo === 'plaintext') {
+      term.add('⚡ PLAINTEXT DETECTED — Instant compromise mode', 'error')
+      term.add('Plaintext passwords are directly readable — no cracking needed.', 'error')
+    }
+
     try {
       term.add(`Launching ${attack.replace('_', ' ')} attack on ${algo}...`, 'warn')
+      if (isBruteForce && demoMode) {
+        term.add('Demo mode: prioritizing short passwords for guaranteed cracking...', 'cyan')
+      }
       setProgress(50)
       const r = await runAttack({
         attack_type: attack, algorithm: algo,
-        max_attempts: maxAttempts, timeout_sec: timeout, target_limit: limit
+        max_attempts: maxAttempts, timeout_sec: timeout,
+        target_limit: limit,
+        demo_mode: isBruteForce ? demoMode : false,
       })
       const d = r.data
       setProgress(90)
       term.sep()
       term.add(`Attack Complete!`, 'success')
-      term.add(`Status      : ${d.stopped_early ? 'PARTIAL (timeout)' : 'FINISHED'}`, d.stopped_early ? 'warn' : 'success')
+
+      // Correctly label timeout vs completion
+      let statusLabel, statusType
+      if (d.stopped_early && isTimeoutVulnerable) {
+        statusLabel = 'TIMEOUT (≠ SECURE — algorithm still vulnerable)'
+        statusType  = 'warn'
+      } else if (d.stopped_early) {
+        statusLabel = 'TIMEOUT (genuine computational resistance)'
+        statusType  = 'success'
+      } else {
+        statusLabel = 'COMPLETE'
+        statusType  = 'success'
+      }
+
+      term.add(`Status      : ${statusLabel}`, statusType)
       term.add(`Cracked     : ${d.cracked_count} / ${d.target_count}`, d.cracked_count > 0 ? 'error' : 'success')
-      term.add(`Success Rate: ${d.success_rate_pct}%`, 'default')
+      term.add(`Success Rate: ${d.success_rate_pct}%`, d.success_rate_pct > 0 ? 'error' : 'success')
       term.add(`Speed       : ${d.attempts_per_sec?.toLocaleString()} attempts/sec`, 'cyan')
       term.add(`Duration    : ${d.total_time_sec?.toFixed(3)}s`, 'default')
+
       if (d.cracked_sample?.length) {
         term.sep()
         term.add('Cracked Passwords (sample):', 'warn')
@@ -148,8 +195,18 @@ export default function ExperimentRunner() {
           term.add(`  → "${c.plain_password}"  (${c.crack_time_ms?.toFixed(4)}ms)`, 'error')
         })
       }
+
       term.sep()
-      term.add(d.security_tier_note?.slice(0, 100) || '', 'dim')
+      // Show timeout warning note if applicable
+      if (d.timeout_note) {
+        term.add(d.timeout_note, d.timeout_note.includes('≠') ? 'warn' : 'success')
+        term.sep()
+      }
+      term.add(d.security_tier_note?.slice(0, 120) || '', 'dim')
+      if (d.search_space_info) term.add(`Space: ${d.search_space_info}`, 'dim')
+      if (d.gpu_crack_estimate) term.add(`GPU time: ${d.gpu_crack_estimate}`, 'dim')
+      if (d.owasp_status) term.add(`OWASP: ${d.owasp_status.slice(0, 80)}`, 'dim')
+
       setResult(d)
       setProgress(100)
     } catch (e) {
@@ -173,11 +230,30 @@ export default function ExperimentRunner() {
       setProgress(100)
       term.add(`Created ${d.total_hashes_created} hashes from ${d.total_passwords} passwords.`, 'success')
       d.algorithms_used?.forEach(a => term.add(`  ✓ ${a}`, 'success'))
+      term.sep()
+      term.add('TIP: For brute force demo, use Demo Mode (short passwords only).', 'cyan')
     } catch (e) {
       term.add(`ERROR: ${e.message}`, 'error')
     } finally {
       setRunning(false)
     }
+  }
+
+  // Determine result banner state
+  const getBannerState = () => {
+    if (!result) return null
+    if (result.cracked_count > 0) return 'compromised'
+    if (result.stopped_early && isTimeoutVulnerable) return 'timeout_warning'
+    if (result.stopped_early) return 'resisted_by_design'
+    return 'resisted'
+  }
+  const bannerState = getBannerState()
+
+  const BANNER_CONFIG = {
+    compromised:        { border: 'border-neon-red',      icon: <AlertTriangle size={16} className="text-cyber-red" />,   label: 'VULNERABILITY CONFIRMED',             textColor: 'text-cyber-red'   },
+    timeout_warning:    { border: 'border-yellow-400/50', icon: <AlertTriangle size={16} className="text-yellow-400" />,  label: 'TIMEOUT — NOT CRYPTOGRAPHICALLY SECURE', textColor: 'text-yellow-400' },
+    resisted_by_design: { border: 'border-neon-green',    icon: <Shield size={16} className="text-cyber-green" />,        label: 'ATTACK RESISTED (Adaptive Hardness)',   textColor: 'text-cyber-green' },
+    resisted:           { border: 'border-neon-green',    icon: <Shield size={16} className="text-cyber-green" />,        label: 'ATTACK RESISTED',                      textColor: 'text-cyber-green' },
   }
 
   return (
@@ -224,6 +300,48 @@ export default function ExperimentRunner() {
                 <AttackButton key={a.id} attack={a} selected={attack} onClick={setAttack} />
               ))}
             </div>
+
+            {/* Demo mode toggle — only visible for brute force */}
+            <AnimatePresence>
+              {isBruteForce && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-4 overflow-hidden"
+                >
+                  <div className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                    demoMode ? 'border-cyber-green/40 bg-cyber-green/5' : 'border-cyber-border/30 bg-cyber-card/30'
+                  }`}>
+                    <button
+                      onClick={() => setDemoMode(p => !p)}
+                      className="flex items-center gap-2 flex-1"
+                    >
+                      {demoMode
+                        ? <ToggleRight size={22} className="text-cyber-green" />
+                        : <ToggleLeft size={22} className="text-cyber-muted" />
+                      }
+                      <div className="text-left">
+                        <p className={`text-xs font-mono font-bold ${demoMode ? 'text-cyber-green' : 'text-cyber-muted'}`}>
+                          {demoMode ? 'DEMO MODE ON' : 'DEMO MODE OFF'}
+                        </p>
+                        <p className="text-[10px] text-cyber-muted font-mono leading-snug">
+                          {demoMode
+                            ? 'Uses short passwords (3-5 chars) — guarantees successful cracking'
+                            : 'Standard mode — may timeout on longer passwords'}
+                        </p>
+                      </div>
+                    </button>
+                    <Badge variant={demoMode ? 'green' : 'gray'}>{demoMode ? 'ACTIVE' : 'OFF'}</Badge>
+                  </div>
+                  {!demoMode && (
+                    <p className="text-[10px] text-yellow-400/70 font-mono mt-2 pl-1">
+                      ⚠ Without demo mode, brute force may timeout. Timeout ≠ algorithm security.
+                    </p>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Parameters */}
@@ -240,7 +358,7 @@ export default function ExperimentRunner() {
             <div className="grid grid-cols-3 gap-4">
               {[
                 { label: 'Target Hashes', val: limit,       set: setLimit,       min: 5,    max: 200,    step: 5   },
-                { label: 'Max Attempts',  val: maxAttempts, set: setMaxAttempts, min: 1000, max: 200000, step: 1000 },
+                { label: 'Max Attempts',  val: maxAttempts, set: setMaxAttempts, min: 1000, max: 500000, step: 5000 },
                 { label: 'Timeout (sec)', val: timeout,     set: _setTimeout,    min: 5,    max: 120,    step: 5   },
               ].map(({ label, val, set, min, max, step }) => (
                 <div key={label}>
@@ -283,36 +401,69 @@ export default function ExperimentRunner() {
 
           {/* Result summary */}
           <AnimatePresence>
-            {result && (
-              <motion.div
-                initial={{ opacity: 0, y: 12, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -8 }}
-                className={`glass-card p-5 border ${result.cracked_count > 0 ? 'border-neon-red' : 'border-neon-green'}`}
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  {result.cracked_count > 0
-                    ? <AlertTriangle size={16} className="text-cyber-red" />
-                    : <Shield size={16} className="text-cyber-green" />
-                  }
-                  <span className="text-sm font-bold text-cyber-text">
-                    {result.cracked_count > 0 ? 'VULNERABILITY CONFIRMED' : 'ATTACK RESISTED'}
-                  </span>
-                </div>
-                <div className="grid grid-cols-3 gap-3 text-center">
-                  {[
-                    { label: 'Cracked', value: `${result.cracked_count}/${result.target_count}`, color: result.cracked_count > 0 ? 'text-cyber-red' : 'text-cyber-green' },
-                    { label: 'Rate', value: `${result.success_rate_pct}%`, color: 'text-cyber-cyan' },
-                    { label: 'Speed', value: `${(result.attempts_per_sec / 1000).toFixed(1)}k/s`, color: 'text-cyber-purple' },
-                  ].map(({ label, value, color }) => (
-                    <div key={label} className="bg-cyber-card/50 rounded-xl p-3 border border-cyber-border/30">
-                      <p className={`text-xl font-extrabold font-mono ${color}`}>{value}</p>
-                      <p className="text-[10px] text-cyber-muted mt-1">{label}</p>
+            {result && bannerState && (() => {
+              const cfg = BANNER_CONFIG[bannerState]
+              return (
+                <motion.div
+                  initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className={`glass-card p-5 border ${cfg.border}`}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    {cfg.icon}
+                    <span className={`text-sm font-bold ${cfg.textColor}`}>{cfg.label}</span>
+                  </div>
+
+                  {/* Timeout warning — critical education message */}
+                  {showTimeoutWarning && (
+                    <div className="mb-3 p-3 bg-yellow-400/5 border border-yellow-400/20 rounded-xl">
+                      <p className="text-[11px] font-mono text-yellow-400 leading-relaxed">
+                        ⚠ <strong>TIMEOUT ≠ SECURE:</strong> {algo.toUpperCase()} is still vulnerable.
+                        Real GPU hardware is ~100,000× faster than this Python simulation.
+                        {isBruteForce && !demoMode && ' Enable Demo Mode to see successful cracks.'}
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
+                  )}
+
+                  {/* Key metrics */}
+                  <div className="grid grid-cols-3 gap-3 text-center mb-4">
+                    {[
+                      { label: 'Cracked', value: `${result.cracked_count}/${result.target_count}`, color: result.cracked_count > 0 ? 'text-cyber-red' : 'text-cyber-green' },
+                      { label: 'Rate', value: `${result.success_rate_pct}%`, color: result.success_rate_pct > 0 ? 'text-cyber-red' : 'text-cyber-green' },
+                      { label: 'Speed', value: `${(result.attempts_per_sec / 1000).toFixed(1)}k/s`, color: 'text-cyber-purple' },
+                    ].map(({ label, value, color }) => (
+                      <div key={label} className="bg-cyber-card/50 rounded-xl p-3 border border-cyber-border/30">
+                        <p className={`text-xl font-extrabold font-mono ${color}`}>{value}</p>
+                        <p className="text-[10px] text-cyber-muted mt-1">{label}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Extended analytics */}
+                  <div className="space-y-0.5">
+                    <InfoRow
+                      label="Interpretation"
+                      value={result.attack_interpretation || result.security_tier_note}
+                      color="text-cyber-text/80"
+                    />
+                    {result.search_space_info && (
+                      <InfoRow label="Search Space" value={result.search_space_info} color="text-cyber-cyan" />
+                    )}
+                    {result.gpu_crack_estimate && (
+                      <InfoRow
+                        label="GPU Crack Time"
+                        value={result.gpu_crack_estimate}
+                        color={result.gpu_crack_estimate.includes('year') ? 'text-cyber-green' : 'text-cyber-red'}
+                      />
+                    )}
+                    {result.owasp_status && (
+                      <InfoRow label="OWASP Status" value={result.owasp_status} color="text-cyber-muted" />
+                    )}
+                  </div>
+                </motion.div>
+              )
+            })()}
           </AnimatePresence>
         </motion.div>
 

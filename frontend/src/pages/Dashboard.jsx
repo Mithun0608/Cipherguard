@@ -22,15 +22,15 @@ const ALGO_COLORS = {
 
 // ── Live feed mock data ────────────────────────────────────────────────────
 const INITIAL_FEED = [
-  { time: '19:08:01', text: 'Dictionary attack initiated on MD5 (50 targets)',        type: 'info' },
-  { time: '19:08:02', text: 'CRACKED  "monkey123"  →  MD5  (0.02ms)',                type: 'error' },
-  { time: '19:08:03', text: 'CRACKED  "password"   →  SHA1 (0.15ms)',                type: 'error' },
-  { time: '19:08:04', text: 'Rainbow table built: 89 entries in 0.4ms',               type: 'info' },
-  { time: '19:08:05', text: 'bcrypt resisted brute force — timeout after 30s',        type: 'warn' },
-  { time: '19:08:06', text: 'MD5 score: F(21) — CRITICAL vulnerability confirmed',   type: 'error' },
-  { time: '19:08:07', text: 'Argon2id score: A+(90) — all 4 attacks FAILED',         type: 'success' },
-  { time: '19:08:08', text: 'Hybrid attack: 132 mutations generated from "dragon"',  type: 'info' },
-  { time: '19:08:09', text: 'Benchmark complete — 7 algorithms evaluated',            type: 'success' },
+  { time: '19:08:01', text: 'Dictionary attack initiated on MD5 (50 targets)',                type: 'info' },
+  { time: '19:08:02', text: 'CRACKED  "monkey123"  →  MD5  (0.02ms) — instant GPU crack',  type: 'error' },
+  { time: '19:08:03', text: 'CRACKED  "password"   →  SHA1 (0.15ms) — deprecated hash',   type: 'error' },
+  { time: '19:08:04', text: 'Rainbow table built: 89 entries in 0.4ms — unsalted hashes vulnerable', type: 'info' },
+  { time: '19:08:05', text: 'MD5 brute force TIMEOUT ≠ secure: GPU hardware 100,000x faster', type: 'warn' },
+  { time: '19:08:06', text: 'MD5 score: F(17) — CRITICAL: fast, unsalted, broken algorithm', type: 'error' },
+  { time: '19:08:07', text: 'Argon2id score: A+(95) — memory-hard, all 4 attacks FAILED',   type: 'success' },
+  { time: '19:08:08', text: 'bcrypt resisted brute force (by design, NOT simulation timeout)', type: 'success' },
+  { time: '19:08:09', text: 'Benchmark complete — ranking: Argon2id>bcrypt>S-SHA256>SHA256>SHA1>MD5>plain', type: 'success' },
 ]
 
 function LiveFeedItem({ item, index }) {
@@ -92,19 +92,26 @@ export default function Dashboard() {
     ]).finally(() => setLoading(false))
   }, [])
 
-  // Simulate live feed updates
+  // Simulate live feed updates with scientifically correct messages
   useEffect(() => {
     const msgs = [
       { text: 'Scanning for new attack results...', type: 'info' },
       { text: 'System health check passed — all modules online', type: 'success' },
-      { text: 'Argon2id: memory-hard KDF — brute force infeasible', type: 'warn' },
+      { text: 'NOTE: Attack timeout ≠ algorithm security. MD5/SHA1 still vulnerable.', type: 'warn' },
+      { text: 'Argon2id: 64MB RAM per attempt — GPU brute force physically impractical', type: 'success' },
+      { text: 'bcrypt cost=12: ~200ms/hash — adaptive slowness defeats mass cracking', type: 'success' },
+      { text: 'MD5/SHA1: billions of hashes/sec on GPU — OWASP Forbidden algorithms', type: 'error' },
+      { text: 'Plaintext: zero protection — instant database exposure on any breach', type: 'error' },
+      { text: 'SHA256: cryptographically strong but NOT designed for password storage', type: 'warn' },
+      { text: 'Salting defeats rainbow tables by making each hash unique per password', type: 'info' },
+      { text: 'OWASP 2024 recommendation: migrate to Argon2id (primary) or bcrypt', type: 'info' },
     ]
     let i = 0
     const id = setInterval(() => {
       const now = new Date().toLocaleTimeString('en-US', { hour12: false })
       setFeedItems(p => [...p.slice(-12), { time: now, ...msgs[i % msgs.length] }])
       i++
-    }, 6000)
+    }, 5000)
     return () => clearInterval(id)
   }, [])
 
@@ -122,9 +129,9 @@ export default function Dashboard() {
   }))
 
   const tierPie = [
-    { name: 'Weak',     value: algoScores.filter(a => a.score < 40).length,              fill: '#ff3366' },
-    { name: 'Moderate', value: algoScores.filter(a => a.score >= 40 && a.score < 70).length, fill: '#ffd700' },
-    { name: 'Strong',   value: algoScores.filter(a => a.score >= 70).length,             fill: '#00ff88' },
+    { name: 'Weak',     value: algoScores.filter(a => a.score < 45).length,               fill: '#ff3366' },
+    { name: 'Moderate', value: algoScores.filter(a => a.score >= 45 && a.score < 70).length, fill: '#ffd700' },
+    { name: 'Strong',   value: algoScores.filter(a => a.score >= 70).length,               fill: '#00ff88' },
   ].filter(t => t.value > 0)
 
   const crackLineData = results.slice(0, 12).map((r, i) => ({
@@ -382,7 +389,9 @@ export default function Dashboard() {
                     <td className="font-mono text-xs text-cyber-muted">{r.total_time_sec?.toFixed(3)}s</td>
                     <td>
                       {r.stopped_early
-                        ? <Badge variant="yellow">PARTIAL</Badge>
+                        ? <span title="Timeout ≠ Secure: weak algorithms remain vulnerable">
+                            <Badge variant="yellow">TIMEOUT</Badge>
+                          </span>
                         : <Badge variant="green">COMPLETE</Badge>
                       }
                     </td>

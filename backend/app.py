@@ -1,4 +1,4 @@
-﻿"""
+"""
 CipherGuard FastAPI Application - Phase 3
 
 Registers all routes: hashing engine (Phase 2) + attack simulation (Phase 3).
@@ -11,8 +11,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.database import engine, Base
 from backend.models import User, AttackResult, PasswordHash
-from backend.routes.hash_routes   import router as hash_router
-from backend.routes.attack_routes import router as attack_router
+from backend.routes.hash_routes    import router as hash_router
+from backend.routes.attack_routes  import router as attack_router
+from backend.routes.stream_routes  import router as stream_router
 
 # ---------------------------------------------------------------------------
 # Logging
@@ -62,6 +63,7 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 app.include_router(hash_router)
 app.include_router(attack_router)
+app.include_router(stream_router)
 
 # ---------------------------------------------------------------------------
 # Root / health
@@ -76,10 +78,11 @@ def read_root():
         "docs"     : "/docs",
         "health"   : "/health",
         "endpoints": {
-            "hashing" : ["/api/v1/hash", "/api/v1/verify", "/api/v1/analyze",
-                         "/api/v1/algorithms", "/api/v1/hash-all", "/api/v1/generate-dataset"],
-            "attacks" : ["/api/v1/run-attack", "/api/v1/attack-results",
-                         "/api/v1/security-score", "/api/v1/benchmark", "/api/v1/attack-logs"],
+            "hashing"  : ["/api/v1/hash", "/api/v1/verify", "/api/v1/analyze",
+                          "/api/v1/algorithms", "/api/v1/hash-all", "/api/v1/generate-dataset"],
+            "attacks"  : ["/api/v1/run-attack", "/api/v1/attack-results",
+                          "/api/v1/security-score", "/api/v1/benchmark", "/api/v1/attack-logs"],
+            "streaming": ["/api/v1/stream-attack (SSE)"],
         },
     }
 

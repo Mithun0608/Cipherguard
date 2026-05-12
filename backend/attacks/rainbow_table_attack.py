@@ -144,6 +144,37 @@ class RainbowTableAttack(BaseAttack):
         Returns:
             AttackReport
         """
+        # ── Plaintext instant compromise ────────────────────────────────────
+        # Plaintext doesn't even need a rainbow table — directly readable.
+        if algorithm == "plaintext":
+            attack_start = time.perf_counter()
+            cracked = []
+            from backend.attacks.base_attack import CrackedPassword
+            for target in targets:
+                cracked.append(CrackedPassword(
+                    record_id      = target.id,
+                    algorithm      = "plaintext",
+                    plain_password = target.hash_value,
+                    stored_hash    = target.hash_value,
+                    crack_time_ms  = 0.001,
+                    attempt_number = len(cracked) + 1,
+                ))
+            total_time = time.perf_counter() - attack_start
+            return self._make_report(
+                algorithm      = "plaintext",
+                target_count   = len(targets),
+                cracked        = cracked,
+                total_attempts = len(targets),
+                total_time_sec = max(total_time, 0.001),
+                wordlist_size  = 0,
+                stopped_early  = False,
+                notes          = (
+                    "INSTANTLY COMPROMISED: Plaintext passwords require no rainbow table. "
+                    "Direct database read exposes every password immediately. "
+                    "100% of accounts compromised upon any database breach."
+                ),
+            )
+
         is_salted = algorithm not in _RAINBOW_SUPPORTED
 
         if is_salted:
@@ -162,9 +193,10 @@ class RainbowTableAttack(BaseAttack):
                 stopped_early  = False,
                 notes          = (
                     f"Rainbow table attack FAILED as expected against '{algorithm}'. "
-                    "Per-password salting prevents precomputed lookup tables. "
-                    "Each password has a unique salt, requiring a separate table per salt — "
-                    "computationally infeasible."
+                    "Per-password salting prevents precomputed lookup tables — "
+                    "each password has a unique salt, requiring a separate table per salt "
+                    "(computationally infeasible with 2^256 possible salts). "
+                    "This demonstrates WHY salting is a critical security defense."
                 ),
             )
 
@@ -216,7 +248,10 @@ class RainbowTableAttack(BaseAttack):
             notes          = (
                 f"Table built in {table_build_sec*1000:.1f} ms | "
                 f"{len(table):,} precomputed hashes | "
-                f"Lookup is O(1) — instant per hash."
+                f"Lookup is O(1) — instant per hash. | "
+                f"{algorithm.upper()} is UNSALTED: identical passwords produce identical hashes, "
+                f"enabling precomputed lookup across all databases simultaneously. "
+                f"Defense: use salted hashing (salted_sha256, bcrypt, or argon2id)."
             ),
         )
 

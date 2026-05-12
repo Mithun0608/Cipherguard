@@ -1,14 +1,3 @@
-"""
-Attack API Routes - CipherGuard Phase 3
-
-Endpoints:
-  POST /api/v1/run-attack          - Run a password attack simulation
-  GET  /api/v1/attack-results      - List stored attack run results
-  GET  /api/v1/security-score      - Compute security scores from stored results
-  POST /api/v1/benchmark           - Run all 4 attacks against all 7 algorithms
-  GET  /api/v1/attack-logs         - List recent JSON log files
-"""
-
 import uuid
 import logging
 from datetime import datetime, timezone
@@ -26,7 +15,7 @@ from backend.logs.attack_logger         import log_attack_run, get_recent_logs
 from backend.score_engine.score_calculator import (
     calculate_score,
     generate_breach_report,
-    AlgorithmScore,
+    estimate_gpu_crack_time,
 )
 from backend.schemas.attack_schemas import (
     RunAttackRequest,
@@ -43,37 +32,116 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1", tags=["Attack Simulation"])
 
 
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _tier_note(algorithm: str, success_rate: float) -> str:
-    """Generate a human-readable narrative about the attack result."""
+def _get_security_interpretation(
+    algorithm    : str,
+    success_rate : float,
+    stopped_early: bool,
+    attack_type  : str,
+) -> str:
+    """
+    Return a scientifically accurate interpretation of attack results.
+
+    CRITICAL RULE: Timeout does NOT mean the algorithm is secure.
+    Fast algorithms (MD5, SHA1, SHA256) that time out during simulation
+    are still highly vulnerable — real GPU hardware is orders of magnitude faster.
+    """
     if algorithm == "plaintext":
         return (
-            "Plaintext storage means zero cracking effort. "
-            "Any database read directly exposes every password."
+            "Plaintext storage provides zero security. "
+            "All passwords are immediately exposed upon database compromise. "
+            "No cracking effort required — passwords are stored in readable form."
         )
-    if success_rate >= 80 and algorithm in WEAK_ALGORITHMS:
+
+    if stopped_early and success_rate == 0.0:
+        algo_msgs = {
+            "md5"          : "MD5 remains vulnerable to optimized GPU brute-force attacks despite timeout during this simulation.",
+            "sha1"         : "SHA1 is deprecated and vulnerable despite incomplete brute-force execution in this simulation.",
+            "sha256"       : "SHA256 is cryptographically strong but insufficient for password hashing without adaptive slowing mechanisms.",
+            "salted_sha256": "Salted SHA-256 resists rainbow tables but remains vulnerable to targeted GPU brute force.",
+            "bcrypt"       : "bcrypt demonstrated strong resistance due to adaptive computational cost. This is by design, not simulation timeout.",
+            "argon2id"     : "Argon2id demonstrated strongest resistance because of memory-hard password hashing. 64MB RAM per attempt makes GPU attacks impractical.",
+        }
+        base_msg = algo_msgs.get(algorithm, f"{algorithm} resisted this simulation.")
+        if algorithm in ("md5", "sha1", "sha256", "salted_sha256"):
+            return (
+                "Attack terminated before exhaustive search completion. "
+                "Result does NOT imply cryptographic security. "
+                + base_msg
+                + " Real-world GPU hardware performs this attack orders of magnitude faster than this simulation."
+            )
+        return base_msg
+
+    if success_rate >= 80:
         return (
-            f"{algorithm.upper()} produces fast, unsalted hashes. "
-            "Attackers can compare millions of hash guesses per second using GPU hardware. "
-            "This algorithm provides virtually no protection."
+            f"{algorithm.upper()} offers virtually no protection. "
+            f"{success_rate:.1f}% of passwords were recovered in simulation. "
+            "Attackers using GPU hardware would crack the entire database within seconds."
         )
-    if success_rate >= 50:
+    if success_rate >= 30:
         return (
-            f"{algorithm} offers limited protection. "
-            "A significant portion of passwords were recovered. Consider migrating."
+            f"{algorithm} offers limited protection — {success_rate:.1f}% of passwords cracked. "
+            "A significant portion of accounts would be compromised in a real breach."
         )
     if success_rate > 0:
         return (
-            f"{algorithm} resisted most attacks. "
-            "Only weak/common passwords were cracked. Strong passwords remain secure."
+            f"{algorithm} resisted most attacks — only {success_rate:.1f}% of passwords cracked. "
+            "Only weak or common passwords were recovered."
         )
+    # 0% cracked, not stopped early
+    if algorithm in ("bcrypt", "argon2id"):
+        algo_msgs = {
+            "bcrypt"  : "bcrypt demonstrated strong resistance due to adaptive computational cost.",
+            "argon2id": "Argon2id demonstrated strongest resistance because of memory-hard password hashing.",
+        }
+        return algo_msgs[algorithm]
     return (
-        f"{algorithm} successfully resisted all simulated attacks. "
-        "The algorithm's computational cost makes mass cracking impractical."
+        f"No passwords cracked in this simulation, but {algorithm} should not be considered secure. "
+        "Real-world GPU hardware is significantly faster than this educational simulation."
     )
+
+
+def _get_owasp_status(algorithm: str) -> str:
+    owasp_recommended = {"argon2id", "bcrypt"}
+    owasp_acceptable  = {"salted_sha256"}
+    owasp_deprecated  = {"sha256", "sha1", "md5", "plaintext"}
+    if algorithm in owasp_recommended:
+        return f"✅ OWASP Recommended — {algorithm} is the current top recommendation for password hashing."
+    elif algorithm in owasp_acceptable:
+        return "⚠️ OWASP Acceptable — salted SHA-256 is a minimum baseline. Upgrade to bcrypt/Argon2id recommended."
+    elif algorithm == "sha256":
+        return "❌ OWASP Not Recommended — SHA-256 is not designed for password storage (no key stretching)."
+    elif algorithm in ("sha1", "md5"):
+        return f"🚨 OWASP Forbidden — {algorithm.upper()} is cryptographically broken and must not be used."
+    else:
+        return "🚨 OWASP Critical — plaintext storage is catastrophically insecure."
+
+
+def _get_timeout_note(algorithm: str, stopped_early: bool, success_rate: float) -> str:
+    if not stopped_early:
+        return ""
+    if algorithm in ("md5", "sha1", "sha256"):
+        return (
+            "⚠️ TIMEOUT ≠ SECURE: This simulation timed out before completing the search space. "
+            f"{algorithm.upper()} remains highly vulnerable to real GPU hardware "
+            "which is 100,000x+ faster than this Python simulation."
+        )
+    if algorithm == "salted_sha256":
+        return (
+            "⚠️ TIMEOUT: Salted SHA-256 resists rainbow tables but GPU brute-force remains feasible. "
+            "Simulation timeout does not indicate full cryptographic security."
+        )
+    if algorithm in ("bcrypt", "argon2id"):
+        return (
+            "✅ Timeout here reflects genuine computational difficulty, not simulation limits. "
+            f"{algorithm} is intentionally slow by design to defeat brute-force attacks."
+        )
+    return "Attack stopped before exhaustive completion."
+
 
 
 def _save_result(
@@ -160,27 +228,57 @@ def run_attack(
     # Execute attack
     try:
         attacker = get_attack(request.attack_type)
-        report   = attacker.run(
-            targets      = targets,
-            algorithm    = request.algorithm,
-            max_attempts = request.max_attempts,
-            timeout_sec  = request.timeout_sec,
-        )
+        # Pass demo_mode to brute force for educational short-password cracking
+        if request.attack_type == "brute_force":
+            report = attacker.run(
+                targets      = targets,
+                algorithm    = request.algorithm,
+                max_attempts = request.max_attempts,
+                timeout_sec  = request.timeout_sec,
+                demo_mode    = request.demo_mode,
+            )
+        else:
+            report = attacker.run(
+                targets      = targets,
+                algorithm    = request.algorithm,
+                max_attempts = request.max_attempts,
+                timeout_sec  = request.timeout_sec,
+            )
     except Exception as e:
         logger.error(f"[AttackAPI] Attack failed: {e}")
         raise HTTPException(status_code=500, detail=f"Attack execution failed: {str(e)}")
 
-    # Compute instant score for this run
-    algo_score = calculate_score(request.algorithm, [report])
+    # Build response enrichment
+    interpretation  = _get_security_interpretation(
+        request.algorithm, report.success_rate_pct, report.stopped_early, report.attack_type
+    )
+    owasp_status    = _get_owasp_status(request.algorithm)
+    timeout_note    = _get_timeout_note(request.algorithm, report.stopped_early, report.success_rate_pct)
+
+    # Search space estimation for brute force
+    search_space_info = ""
+    gpu_crack_est     = ""
+    if request.attack_type == "brute_force":
+        charset_size   = 36  # default lower+digits
+        max_len        = 5
+        space          = sum(charset_size ** l for l in range(1, max_len + 1))
+        search_space_info = f"{charset_size}^{max_len} search space ≈ {space:,} combinations (lower+digits, len 1-{max_len})"
+        gpu_crack_est  = estimate_gpu_crack_time(request.algorithm, space)
+    elif request.attack_type == "rainbow_table":
+        search_space_info = f"Precomputed table: {report.wordlist_size:,} hash→plaintext entries"
+        gpu_crack_est  = "O(1) lookup — instant after table is built"
+
 
     # Persist to DB
     saved_to_db = False
     if request.save_to_db:
         try:
+            algo_score = calculate_score(request.algorithm, [report])
             _save_result(db, report, request.run_label, float(algo_score.score))
             saved_to_db = True
         except Exception as e:
             logger.warning(f"[AttackAPI] DB save failed: {e}")
+
 
     # Write JSON log
     config = {
@@ -203,23 +301,28 @@ def run_attack(
     ]
 
     return RunAttackResponse(
-        run_id             = run_id,
-        attack_type        = report.attack_type,
-        algorithm          = report.algorithm,
-        target_count       = report.target_count,
-        cracked_count      = report.cracked_count,
-        success_rate_pct   = report.success_rate_pct,
-        total_time_sec     = report.total_time_sec,
-        total_attempts     = report.total_attempts,
-        attempts_per_sec   = report.attempts_per_sec,
-        avg_crack_time_ms  = report.avg_crack_time_ms,
-        max_crack_time_ms  = report.max_crack_time_ms,
-        wordlist_size      = report.wordlist_size,
-        stopped_early      = report.stopped_early,
-        notes              = report.notes,
-        cracked_sample     = cracked_sample,
-        security_tier_note = _tier_note(request.algorithm, report.success_rate_pct),
-        saved_to_db        = saved_to_db,
+        run_id               = run_id,
+        attack_type          = report.attack_type,
+        algorithm            = report.algorithm,
+        target_count         = report.target_count,
+        cracked_count        = report.cracked_count,
+        success_rate_pct     = report.success_rate_pct,
+        total_time_sec       = report.total_time_sec,
+        total_attempts       = report.total_attempts,
+        attempts_per_sec     = report.attempts_per_sec,
+        avg_crack_time_ms    = report.avg_crack_time_ms,
+        max_crack_time_ms    = report.max_crack_time_ms,
+        wordlist_size        = report.wordlist_size,
+        stopped_early        = report.stopped_early,
+        notes                = report.notes,
+        cracked_sample       = cracked_sample,
+        security_tier_note   = interpretation,
+        saved_to_db          = saved_to_db,
+        attack_interpretation= interpretation,
+        search_space_info    = search_space_info,
+        gpu_crack_estimate   = gpu_crack_est,
+        owasp_status         = owasp_status,
+        timeout_note         = timeout_note,
     )
 
 
