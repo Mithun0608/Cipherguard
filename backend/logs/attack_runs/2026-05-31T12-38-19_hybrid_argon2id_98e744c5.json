@@ -1,0 +1,27 @@
+{
+  "run_id": "98e744c5-de73-42b7-a36a-e8ae8ae4f234",
+  "timestamp": "2026-05-31T12:38:19.873472+00:00",
+  "attack_type": "hybrid",
+  "algorithm": "argon2id",
+  "config": {
+    "max_attempts": 500000,
+    "timeout_sec": 30.0,
+    "target_limit": 30,
+    "target_count": 30
+  },
+  "results": {
+    "target_count": 30,
+    "cracked_count": 0,
+    "success_rate_pct": 0.0,
+    "total_time_sec": 31.4113,
+    "total_attempts": 420,
+    "attempts_per_sec": 13.37,
+    "avg_crack_time_ms": 0.0,
+    "max_crack_time_ms": 0.0,
+    "wordlist_size": 420000,
+    "stopped_early": true,
+    "notes": "Base words: 10,000 | Rules: 13 | Est candidates: 420,000 | Top cracking rules: [] | Stopped early."
+  },
+  "cracked_sample": [],
+  "total_cracked_full": 0
+}

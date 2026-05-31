@@ -6,7 +6,6 @@ import AttackAnalysis from './pages/AttackAnalysis'
 import AlgorithmComparison from './pages/AlgorithmComparison'
 import SecurityScorecard from './pages/SecurityScorecard'
 import SaltingVisualizer from './pages/SaltingVisualizer'
-import BreachSimulator from './pages/BreachSimulator'
 import LogsReports from './pages/LogsReports'
 import Settings from './pages/Settings'
 import LiveAttack from './pages/LiveAttack'
@@ -24,7 +23,6 @@ export default function App() {
           <Route path="algorithms"   element={<AlgorithmComparison />} />
           <Route path="scorecard"    element={<SecurityScorecard />} />
           <Route path="salting"      element={<SaltingVisualizer />} />
-          <Route path="breach"       element={<BreachSimulator />} />
           <Route path="logs"         element={<LogsReports />} />
           <Route path="settings"     element={<Settings />} />
         </Route>

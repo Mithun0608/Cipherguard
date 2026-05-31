@@ -40,7 +40,7 @@ _ROCKYOU_CANDIDATES = [
     Path(r"C:\Tools\wordlists\rockyou.txt"),
     Path("/usr/share/wordlists/rockyou.txt"),
     Path("/opt/wordlists/rockyou.txt"),
-    Path(__file__).parents[3] / "datasets" / "rockyou.txt",
+    Path(__file__).parents[2] / "datasets" / "rockyou.txt",
 ]
 
 # ---------------------------------------------------------------------------

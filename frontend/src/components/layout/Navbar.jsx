@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Shield, Wifi, WifiOff, Bell, Search, Activity,
@@ -8,22 +8,21 @@ import {
 import { healthCheck } from '../../services/api'
 
 const PAGE_META = {
-  '/dashboard':  { title: 'Mission Control',    sub: 'Security overview & real-time analytics',        crumb: ['Dashboard', 'Overview'] },
-  '/experiment': { title: 'Experiment Runner',  sub: 'Configure and launch attack simulations',        crumb: ['Dashboard', 'Experiment'] },
-  '/attacks':    { title: 'Attack Analysis',    sub: 'Detailed simulation results by attack vector',   crumb: ['Dashboard', 'Attacks'] },
-  '/algorithms': { title: 'Algorithm Compare',  sub: 'Head-to-head algorithm benchmarks',             crumb: ['Dashboard', 'Algorithms'] },
-  '/scorecard':  { title: 'Security Scorecard', sub: 'Algorithm security rankings and certifications', crumb: ['Dashboard', 'Scorecard'] },
-  '/salting':    { title: 'Salting Visualizer', sub: 'Interactive salt protection demonstration',      crumb: ['Dashboard', 'Salting'] },
-  '/breach':     { title: 'Breach Simulator',   sub: 'Advanced database breach attack simulation',     crumb: ['Dashboard', 'Breach'] },
-  '/logs':       { title: 'Logs & Reports',     sub: 'Structured attack logs and exportable reports',  crumb: ['Dashboard', 'Logs'] },
-  '/settings':   { title: 'Settings',           sub: 'Configuration and system preferences',           crumb: ['Dashboard', 'Settings'] },
+  '/dashboard': { title: 'Mission Control', sub: 'Security overview & real-time analytics', crumb: ['Dashboard', 'Overview'] },
+  '/experiment': { title: 'Experiment Runner', sub: 'Configure and launch attack simulations', crumb: ['Dashboard', 'Experiment'] },
+  '/attacks': { title: 'Attack Analysis', sub: 'Detailed simulation results by attack vector', crumb: ['Dashboard', 'Attacks'] },
+  '/algorithms': { title: 'Algorithm Compare', sub: 'Head-to-head algorithm benchmarks', crumb: ['Dashboard', 'Algorithms'] },
+  '/scorecard': { title: 'Security Scorecard', sub: 'Algorithm security rankings and certifications', crumb: ['Dashboard', 'Scorecard'] },
+  '/salting': { title: 'Salting Visualizer', sub: 'Interactive salt protection demonstration', crumb: ['Dashboard', 'Salting'] },
+  '/logs': { title: 'Logs & Reports', sub: 'Structured attack logs and exportable reports', crumb: ['Dashboard', 'Logs'] },
+  '/settings': { title: 'Settings', sub: 'Configuration and system preferences', crumb: ['Dashboard', 'Settings'] },
 }
 
 const MOCK_NOTIFICATIONS = [
-  { id: 1, type: 'error',   msg: 'MD5 cracked in 0.02ms — dictionary attack', time: '2m ago' },
-  { id: 2, type: 'warn',    msg: 'bcrypt resisted brute force (30s timeout)',  time: '5m ago' },
-  { id: 3, type: 'info',    msg: 'Security score computed for 7 algorithms',   time: '12m ago' },
-  { id: 4, type: 'success', msg: 'Dataset generated: 350 hashes created',      time: '18m ago' },
+  { id: 1, type: 'error', msg: 'MD5 cracked in 0.02ms — dictionary attack', time: '2m ago' },
+  { id: 2, type: 'warn', msg: 'bcrypt resisted brute force (30s timeout)', time: '5m ago' },
+  { id: 3, type: 'info', msg: 'Security score computed for 7 algorithms', time: '12m ago' },
+  { id: 4, type: 'success', msg: 'Dataset generated: 350 hashes created', time: '18m ago' },
 ]
 
 const N_TYPE = { error: 'text-cyber-red', warn: 'text-yellow-400', info: 'text-cyber-cyan', success: 'text-cyber-green' }
@@ -31,10 +30,11 @@ const N_ICON = { error: '⚠', warn: '⚡', info: 'ℹ', success: '✓' }
 
 export default function Navbar() {
   const location = useLocation()
-  const [online, setOnline]       = useState(null)
-  const [search, setSearch]       = useState('')
+  const navigate = useNavigate()
+  const [online, setOnline] = useState(null)
+  const [search, setSearch] = useState('')
   const [showNotifs, setShowNotifs] = useState(false)
-  const [unread, setUnread]       = useState(MOCK_NOTIFICATIONS.length)
+  const [unread, setUnread] = useState(MOCK_NOTIFICATIONS.length)
   const page = PAGE_META[location.pathname] || { title: 'CipherGuard', sub: '', crumb: ['Dashboard'] }
 
   useEffect(() => {
@@ -73,23 +73,7 @@ export default function Navbar() {
         <h1 className="text-base font-bold text-cyber-text leading-tight">{page.title}</h1>
       </motion.div>
 
-      {/* Center: search */}
-      <div className="hidden md:flex items-center gap-2.5 bg-cyber-card/60 border border-cyber-border/40
-                      rounded-xl px-3.5 py-2 w-72 hover:border-cyber-cyan/30 transition-all duration-200
-                      focus-within:border-cyber-cyan/40 focus-within:shadow-glow-sm group">
-        <Search size={13} className="text-cyber-muted group-focus-within:text-cyber-cyan transition-colors" />
-        <input
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search algorithms, attacks, logs..."
-          className="bg-transparent text-sm text-cyber-text placeholder:text-cyber-muted/30 outline-none w-full font-mono"
-        />
-        {search && (
-          <button onClick={() => setSearch('')} className="text-cyber-muted hover:text-cyber-red transition-colors">
-            <X size={12} />
-          </button>
-        )}
-      </div>
+
 
       {/* Right: status pills */}
       <div className="flex items-center gap-2">
@@ -113,17 +97,16 @@ export default function Navbar() {
         {/* Backend status */}
         <motion.div
           animate={{ opacity: 1 }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono transition-all duration-500 ${
-            online === null
-              ? 'bg-cyber-card/60 border-cyber-border/40 text-cyber-muted'
-              : online
-                ? 'bg-cyber-green/8 border-cyber-green/30 text-cyber-green'
-                : 'bg-cyber-red/8 border-cyber-red/30 text-cyber-red'
-          }`}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono transition-all duration-500 ${online === null
+            ? 'bg-cyber-card/60 border-cyber-border/40 text-cyber-muted'
+            : online
+              ? 'bg-cyber-green/8 border-cyber-green/30 text-cyber-green'
+              : 'bg-cyber-red/8 border-cyber-red/30 text-cyber-red'
+            }`}
         >
-          {online === null  ? <Activity size={11} className="animate-pulse" />
-           : online         ? <Wifi size={11} />
-           :                  <WifiOff size={11} />}
+          {online === null ? <Activity size={11} className="animate-pulse" />
+            : online ? <Wifi size={11} />
+              : <WifiOff size={11} />}
           <span>{online === null ? 'CHECKING' : online ? 'API LIVE' : 'OFFLINE'}</span>
           {online && <span className="w-1.5 h-1.5 rounded-full bg-cyber-green animate-pulse" />}
         </motion.div>
@@ -181,7 +164,10 @@ export default function Navbar() {
                   ))}
                 </div>
                 <div className="px-4 py-2 text-center">
-                  <button className="text-[11px] font-mono text-cyber-cyan hover:text-cyber-cyan/70 transition-colors">
+                  <button
+                    onClick={() => { navigate('/logs'); setShowNotifs(false); }}
+                    className="text-[11px] font-mono text-cyber-cyan hover:text-cyber-cyan/70 transition-colors"
+                  >
                     View all in Logs →
                   </button>
                 </div>

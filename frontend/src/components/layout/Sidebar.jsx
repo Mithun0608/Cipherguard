@@ -8,23 +8,22 @@ import {
 } from 'lucide-react'
 
 const NAV = [
-  { to: '/dashboard',   icon: LayoutDashboard, label: 'Dashboard',        sub: 'Mission Control',   color: 'cyan' },
-  { to: '/experiment',  icon: FlaskConical,    label: 'Experiment',       sub: 'Attack Runner',     color: 'purple' },
-  { to: '/live-attack', icon: Radio,           label: 'Live Attack',      sub: 'Real-Time View',    color: 'red' },
-  { to: '/attacks',     icon: Swords,          label: 'Attack Analysis',  sub: 'Deep Dive',         color: 'red' },
-  { to: '/algorithms', icon: GitCompare,       label: 'Algorithms',       sub: 'Comparison',        color: 'cyan' },
-  { to: '/scorecard',  icon: ShieldCheck,      label: 'Scorecard',        sub: 'Security Rank',     color: 'green' },
-  { to: '/salting',    icon: Layers,           label: 'Salting',          sub: 'Visualizer',        color: 'purple' },
-  { to: '/breach',     icon: Radiation,        label: 'Breach Sim',       sub: 'Simulation',        color: 'red' },
-  { to: '/logs',       icon: FileText,         label: 'Logs & Reports',   sub: 'Enterprise View',   color: 'cyan' },
-  { to: '/settings',   icon: Settings,         label: 'Settings',         sub: 'Configuration',     color: 'cyan' },
+  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', sub: 'Mission Control', color: 'cyan' },
+  { to: '/experiment', icon: FlaskConical, label: 'Experiment', sub: 'Attack Runner', color: 'purple' },
+  { to: '/live-attack', icon: Radio, label: 'Live Attack', sub: 'Real-Time View', color: 'red' },
+  { to: '/attacks', icon: Swords, label: 'Attack Analysis', sub: 'Deep Dive', color: 'red' },
+  { to: '/algorithms', icon: GitCompare, label: 'Algorithms', sub: 'Comparison', color: 'cyan' },
+  { to: '/scorecard', icon: ShieldCheck, label: 'Scorecard', sub: 'Security Rank', color: 'green' },
+  { to: '/salting', icon: Layers, label: 'Salting', sub: 'Visualizer', color: 'purple' },
+  { to: '/logs', icon: FileText, label: 'Logs & Reports', sub: 'Enterprise View', color: 'cyan' },
+  { to: '/settings', icon: Settings, label: 'Settings', sub: 'Configuration', color: 'cyan' },
 ]
 
 const COLOR_MAP = {
-  cyan:   { text: 'text-cyber-cyan',   activeBg: 'bg-cyber-cyan/10',   activeBorder: 'border-cyber-cyan/40',   dot: 'bg-cyber-cyan',   glow: 'shadow-glow-cyan' },
+  cyan: { text: 'text-cyber-cyan', activeBg: 'bg-cyber-cyan/10', activeBorder: 'border-cyber-cyan/40', dot: 'bg-cyber-cyan', glow: 'shadow-glow-cyan' },
   purple: { text: 'text-cyber-purple', activeBg: 'bg-cyber-purple/10', activeBorder: 'border-cyber-purple/40', dot: 'bg-cyber-purple', glow: 'shadow-glow-purple' },
-  green:  { text: 'text-cyber-green',  activeBg: 'bg-cyber-green/10',  activeBorder: 'border-cyber-green/40',  dot: 'bg-cyber-green',  glow: 'shadow-glow-green' },
-  red:    { text: 'text-cyber-red',    activeBg: 'bg-cyber-red/10',    activeBorder: 'border-cyber-red/40',    dot: 'bg-cyber-red',    glow: 'shadow-glow-red' },
+  green: { text: 'text-cyber-green', activeBg: 'bg-cyber-green/10', activeBorder: 'border-cyber-green/40', dot: 'bg-cyber-green', glow: 'shadow-glow-green' },
+  red: { text: 'text-cyber-red', activeBg: 'bg-cyber-red/10', activeBorder: 'border-cyber-red/40', dot: 'bg-cyber-red', glow: 'shadow-glow-red' },
 }
 
 export default function Sidebar() {
@@ -34,28 +33,26 @@ export default function Sidebar() {
 
   const SidebarContent = ({ isMobile = false }) => (
     <div className={`flex flex-col h-full ${isMobile ? 'w-64' : ''}`}>
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-cyber-border/40 min-h-[68px]">
-        <div className="relative flex-shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-cyber-cyan/10 border border-cyber-cyan/40 flex items-center justify-center shadow-glow-cyan">
-            <Shield size={18} className="text-cyber-cyan" />
-          </div>
-          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-cyber-green border-2 border-cyber-bg animate-pulse" />
+      {/* Branding Section */}
+      <div className="flex flex-col items-center justify-center py-8 border-b border-cyber-border/40 min-h-[68px]">
+        <div className={`relative flex items-center justify-center overflow-hidden transition-all duration-300 ${(!collapsed || isMobile) ? 'w-40 h-40' : 'w-12 h-12'}`}>
+          <img
+            src="/logo.png"
+            alt="CipherGuard Logo"
+            className={`object-contain w-full h-full transition-all duration-300 drop-shadow-[0_0_12px_rgba(0,245,255,0.5)] ${(!collapsed || isMobile) ? 'scale-[1.35]' : 'scale-150'}`}
+          />
+          <span
+            className={`absolute z-10 rounded-full bg-cyber-green border-2 border-cyber-surface animate-pulse transition-all duration-300 
+              ${(!collapsed || isMobile) ? 'top-4 right-4 w-3.5 h-3.5' : 'top-1 right-1 w-2.5 h-2.5'}
+            `}
+          />
         </div>
-        <AnimatePresence>
-          {(!collapsed || isMobile) && (
-            <motion.div
-              initial={{ opacity: 0, x: -10, width: 0 }}
-              animate={{ opacity: 1, x: 0, width: 'auto' }}
-              exit={{ opacity: 0, x: -10, width: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden whitespace-nowrap"
-            >
-              <p className="text-sm font-extrabold text-cyber-gradient tracking-wide">CipherGuard</p>
-              <p className="text-[10px] text-cyber-muted font-mono">v3.0 · Phase III</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+
+        {(!collapsed || isMobile) && (
+          <h1 className="mt-3 text-lg font-bold text-cyber-text tracking-widest uppercase drop-shadow-sm">
+            CipherGuard
+          </h1>
+        )}
       </div>
 
       {/* Nav label */}

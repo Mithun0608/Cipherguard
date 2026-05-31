@@ -138,7 +138,7 @@ export default function LogsReports() {
   const load = () => {
     setLoading(true)
     Promise.all([
-      getAttackLogs(100).then(r => setLogs(r.data.logs || [])).catch(() => {}),
+      getAttackLogs(50).then(r => setLogs(r.data.logs || [])).catch(() => {}),
       getAttackResults({ limit: 200 }).then(r => setResults(r.data.results || [])).catch(() => {}),
     ]).finally(() => setLoading(false))
   }
