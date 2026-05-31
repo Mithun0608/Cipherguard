@@ -1,0 +1,27 @@
+{
+  "run_id": "92296993-eb82-466b-a456-869182ceddcd",
+  "timestamp": "2026-05-18T04:43:55.000186+00:00",
+  "attack_type": "brute_force",
+  "algorithm": "sha256",
+  "config": {
+    "benchmark": true,
+    "target_limit": 20,
+    "max_attempts": 15000,
+    "timeout_sec": 12.0
+  },
+  "results": {
+    "target_count": 20,
+    "cracked_count": 0,
+    "success_rate_pct": 0.0,
+    "total_time_sec": 0.5998,
+    "total_attempts": 15000,
+    "attempts_per_sec": 25007.41,
+    "avg_crack_time_ms": 0.0,
+    "max_crack_time_ms": 0.0,
+    "wordlist_size": 15000,
+    "stopped_early": true,
+    "notes": "Charset: 36 chars | Length: 1-5 | Search space: 62.2M combinations | Stopped early. IMPORTANT: Timeout does NOT imply this algorithm is secure. SHA256 remains highly vulnerable to GPU-accelerated attacks. Real-world GPU estimated crack time: 6.2 milliseconds."
+  },
+  "cracked_sample": [],
+  "total_cracked_full": 0
+}

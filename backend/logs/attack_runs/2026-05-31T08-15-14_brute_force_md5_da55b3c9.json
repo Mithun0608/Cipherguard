@@ -1,0 +1,40 @@
+{
+  "run_id": "da55b3c9-e388-4d8d-b378-c1e67295bc8a",
+  "timestamp": "2026-05-31T08:15:14.841012+00:00",
+  "attack_type": "brute_force",
+  "algorithm": "md5",
+  "config": {
+    "max_attempts": 500000,
+    "timeout_sec": 30.0,
+    "target_limit": 30,
+    "target_count": 30
+  },
+  "results": {
+    "target_count": 30,
+    "cracked_count": 2,
+    "success_rate_pct": 6.67,
+    "total_time_sec": 24.2552,
+    "total_attempts": 500000,
+    "attempts_per_sec": 20614.1,
+    "avg_crack_time_ms": 0.0032,
+    "max_crack_time_ms": 0.0032,
+    "wordlist_size": 500000,
+    "stopped_early": true,
+    "notes": "Charset: 36 chars | Length: 1-5 | Search space: 62.2M combinations | Demo mode ON. Stopped early. Attack terminated before exhaustive search completion. Result does not imply cryptographic security."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 205,
+      "plain_password": "test",
+      "crack_time_ms": 0.0032,
+      "attempt_number": 90
+    },
+    {
+      "record_id": 177,
+      "plain_password": "pass",
+      "crack_time_ms": 0.0031,
+      "attempt_number": 116
+    }
+  ],
+  "total_cracked_full": 2
+}

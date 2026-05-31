@@ -1,0 +1,34 @@
+{
+  "run_id": "0dd245be-833d-4dbc-a1f1-236bb66dd46d",
+  "timestamp": "2026-05-20T07:38:44.203771+00:00",
+  "attack_type": "brute_force",
+  "algorithm": "bcrypt",
+  "config": {
+    "max_attempts": 500000,
+    "timeout_sec": 30.0,
+    "target_limit": 30,
+    "target_count": 30
+  },
+  "results": {
+    "target_count": 30,
+    "cracked_count": 1,
+    "success_rate_pct": 3.33,
+    "total_time_sec": 40.8518,
+    "total_attempts": 91,
+    "attempts_per_sec": 2.23,
+    "avg_crack_time_ms": 469.1736,
+    "max_crack_time_ms": 469.1736,
+    "wordlist_size": 500000,
+    "stopped_early": true,
+    "notes": "Charset: 36 chars | Length: 1-5 | Search space: 62.2M combinations | Demo mode ON. Stopped early. Attack terminated before exhaustive search completion. Result does not imply cryptographic security."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 139,
+      "plain_password": "test",
+      "crack_time_ms": 469.1736,
+      "attempt_number": 80
+    }
+  ],
+  "total_cracked_full": 1
+}

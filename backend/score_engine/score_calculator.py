@@ -463,7 +463,16 @@ def generate_breach_report(
             recommendations         = [],
         )
 
-    sorted_scores = sorted(scores, key=lambda s: s.score, reverse=True)
+    # Sort by score (desc), then by canonical security rank (strongest first) to break ties deterministically
+    sorted_scores = sorted(
+        scores,
+        key=lambda s: (
+            s.score,
+            -ALGORITHM_SECURITY_RANK.index(s.algorithm)
+             if s.algorithm in ALGORITHM_SECURITY_RANK else -99,
+        ),
+        reverse=True,
+    )
     strongest = sorted_scores[0]
     weakest   = sorted_scores[-1]
 

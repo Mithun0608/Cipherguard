@@ -15,8 +15,8 @@ from backend.logs.attack_logger         import log_attack_run, get_recent_logs
 from backend.score_engine.score_calculator import (
     calculate_score,
     generate_breach_report,
-    estimate_gpu_crack_time,
 )
+from backend.utils.attack_utils import estimate_gpu_crack_time
 from backend.schemas.attack_schemas import (
     RunAttackRequest,
     RunAttackResponse,

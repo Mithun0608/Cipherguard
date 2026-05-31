@@ -16,6 +16,7 @@ import logging
 from types import SimpleNamespace
 from threading import Thread
 from queue import Queue, Empty
+from typing import Optional
 
 from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import StreamingResponse
@@ -32,11 +33,17 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1", tags=["Streaming Attack"])
 
 
+_CACHED_WORDLIST: Optional[list[str]] = None
+
 def _load_wordlist() -> list[str]:
+    global _CACHED_WORDLIST
+    if _CACHED_WORDLIST is not None:
+        return _CACHED_WORDLIST
     try:
-        return DictionaryAttack().wordlist
+        _CACHED_WORDLIST = DictionaryAttack().wordlist
+        return _CACHED_WORDLIST
     except Exception:
-        return [
+        _CACHED_WORDLIST = [
             "password","123456","admin","qwerty","letmein","dragon","monkey",
             "iloveyou","welcome","football","shadow","master","abc123","test",
             "pass","hello","login","admin123","abc","secret","root","user",
@@ -91,8 +98,10 @@ async def stream_attack_sse(
                                  headers={"Cache-Control":"no-cache","X-Accel-Buffering":"no"})
 
     # Convert to plain objects — safe for background thread
+    # NOTE: do NOT call db.close() here — Depends(get_db) handles session
+    # cleanup in its finally block after the route function returns.
     targets = [_orm_to_ns(t) for t in orm_targets]
-    db.close()  # explicitly close session before thread starts
+
 
     wordlist = _load_wordlist()
 
@@ -169,8 +178,9 @@ async def stream_attack_sse(
                     event["ts"] = int(time.time() * 1000)
                 yield f"data: {json.dumps(event)}\n\n"
             except Empty:
-                # Keep connection alive + yield control to event loop
-                yield ": ping\n\n"
+                # Keep connection alive — use a proper data event (not comment)
+                # because some proxies only reset buffer timeout on data: lines
+                yield "data: {}\n\n"
                 await asyncio.sleep(0.05)
 
     return StreamingResponse(

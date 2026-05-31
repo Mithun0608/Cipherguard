@@ -1,0 +1,27 @@
+{
+  "run_id": "4a7f8c52-b677-4358-a961-61a99931866f",
+  "timestamp": "2026-05-18T07:03:52.427163+00:00",
+  "attack_type": "brute_force",
+  "algorithm": "sha1",
+  "config": {
+    "benchmark": true,
+    "target_limit": 20,
+    "max_attempts": 15000,
+    "timeout_sec": 12.0
+  },
+  "results": {
+    "target_count": 20,
+    "cracked_count": 0,
+    "success_rate_pct": 0.0,
+    "total_time_sec": 0.6415,
+    "total_attempts": 15000,
+    "attempts_per_sec": 23383.28,
+    "avg_crack_time_ms": 0.0,
+    "max_crack_time_ms": 0.0,
+    "wordlist_size": 15000,
+    "stopped_early": true,
+    "notes": "Charset: 36 chars | Length: 1-5 | Search space: 62.2M combinations | Stopped early. IMPORTANT: Timeout does NOT imply this algorithm is secure. SHA1 remains highly vulnerable to GPU-accelerated attacks. Real-world GPU estimated crack time: 2.6 milliseconds."
+  },
+  "cracked_sample": [],
+  "total_cracked_full": 0
+}

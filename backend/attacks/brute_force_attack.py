@@ -266,14 +266,14 @@ class BruteForceAttack(BaseAttack):
         """
         attack_start = time.perf_counter()
         cracked = []
-        for target in targets:
+        for i, target in enumerate(targets, 1):
             cracked.append(CrackedPassword(
                 record_id      = target.id,
                 algorithm      = "plaintext",
                 plain_password = target.hash_value,  # hash_value IS the password
                 stored_hash    = target.hash_value,
                 crack_time_ms  = 0.001,
-                attempt_number = cracked.__len__() + 1,
+                attempt_number = i,
             ))
         total_time = time.perf_counter() - attack_start
 

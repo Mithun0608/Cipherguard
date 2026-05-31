@@ -172,3 +172,70 @@ class SecurityScoreResponse(BaseModel):
     summary                 : str
     recommendations         : list[str]
     algorithm_scores        : list[AlgorithmScoreOut]
+
+
+# ---------------------------------------------------------------------------
+# POST /custom-stream-attack  (Custom Password Attack Mode)
+# ---------------------------------------------------------------------------
+
+class CustomAttackRequest(BaseModel):
+    """
+    Request body to launch a custom password attack simulation.
+
+    Security guarantees:
+      - password is NEVER stored in any database table
+      - password is NEVER written to logs or files
+      - Only the derived hash is passed to the attack engine
+      - Session is in-memory only and cleaned up after stream completes
+    """
+
+    password   : str = Field(
+        ...,
+        min_length=1,
+        max_length=256,
+        description="Plaintext password to attack. Never persisted anywhere.",
+    )
+    algorithm  : str = Field(
+        ...,
+        description="Hashing algorithm to use",
+        examples=["md5", "bcrypt", "argon2id"],
+    )
+    attack_type: str = Field(
+        ...,
+        description="Attack type to run",
+        examples=["dictionary", "brute_force", "hybrid", "rainbow_table"],
+    )
+    timeout_sec: float = Field(
+        default=60.0,
+        ge=5.0,
+        le=300.0,
+        description="Wall-clock timeout for the attack in seconds",
+    )
+
+    @field_validator("algorithm")
+    @classmethod
+    def validate_algorithm(cls, v: str) -> str:
+        if v.lower() not in VALID_ALGORITHMS:
+            raise ValueError(
+                f"Unknown algorithm '{v}'. "
+                f"Valid: {', '.join(VALID_ALGORITHMS)}"
+            )
+        return v.lower()
+
+    @field_validator("attack_type")
+    @classmethod
+    def validate_attack_type(cls, v: str) -> str:
+        if v.lower() not in VALID_ATTACK_TYPES:
+            raise ValueError(
+                f"Unknown attack type '{v}'. "
+                f"Valid: {', '.join(VALID_ATTACK_TYPES)}"
+            )
+        return v.lower()
+
+
+class CustomAttackSessionResponse(BaseModel):
+    """Response returned after creating a custom attack session."""
+    attack_id  : str
+    algorithm  : str
+    attack_type: str
+    message    : str = "Session created. Connect to the stream endpoint to begin."

@@ -61,9 +61,11 @@ def log_attack_run(
     timestamp = datetime.now(timezone.utc).isoformat()
     log_dir   = _get_log_dir()
 
-    # Filename: <timestamp>_<attack>_<algo>.json
+    # Filename: <timestamp>_<attack>_<algo>_<run_id[:8]>.json
+    # The run_id suffix prevents collision when two attacks of the same type
+    # complete within the same second.
     safe_ts   = timestamp[:19].replace(":", "-")
-    filename  = f"{safe_ts}_{report.attack_type}_{report.algorithm}.json"
+    filename  = f"{safe_ts}_{report.attack_type}_{report.algorithm}_{run_id[:8]}.json"
     filepath  = log_dir / filename
 
     # Serialize cracked passwords — limit sample to 20 entries in log

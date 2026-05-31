@@ -1,0 +1,46 @@
+{
+  "run_id": "3cb7731e-e577-4f7a-acc0-aa431bb6dbcb",
+  "timestamp": "2026-05-18T07:03:53.912619+00:00",
+  "attack_type": "hybrid",
+  "algorithm": "salted_sha256",
+  "config": {
+    "benchmark": true,
+    "target_limit": 20,
+    "max_attempts": 15000,
+    "timeout_sec": 12.0
+  },
+  "results": {
+    "target_count": 20,
+    "cracked_count": 3,
+    "success_rate_pct": 15.0,
+    "total_time_sec": 0.0372,
+    "total_attempts": 15009,
+    "attempts_per_sec": 403732.79,
+    "avg_crack_time_ms": 0.002,
+    "max_crack_time_ms": 0.002,
+    "wordlist_size": 44685,
+    "stopped_early": true,
+    "notes": "Base words: 993 | Rules: 13 | Est candidates: 44,685 | Top cracking rules: [_rule_append_numbers=1, _rule_reverse=1, _rule_capitalize_append=1] | Stopped early."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 24,
+      "plain_password": "password123",
+      "crack_time_ms": 0.002,
+      "attempt_number": 86
+    },
+    {
+      "record_id": 48,
+      "plain_password": "654321",
+      "crack_time_ms": 0.002,
+      "attempt_number": 1574
+    },
+    {
+      "record_id": 28,
+      "plain_password": "Dragon2024!",
+      "crack_time_ms": 0.0019,
+      "attempt_number": 7636
+    }
+  ],
+  "total_cracked_full": 3
+}

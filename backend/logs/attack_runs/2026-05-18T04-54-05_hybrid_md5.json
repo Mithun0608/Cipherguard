@@ -1,0 +1,52 @@
+{
+  "run_id": "966f6950-c606-455e-89ac-dfca137a1d40",
+  "timestamp": "2026-05-18T04:54:05.230059+00:00",
+  "attack_type": "hybrid",
+  "algorithm": "md5",
+  "config": {
+    "benchmark": true,
+    "target_limit": 20,
+    "max_attempts": 15000,
+    "timeout_sec": 12.0
+  },
+  "results": {
+    "target_count": 20,
+    "cracked_count": 4,
+    "success_rate_pct": 20.0,
+    "total_time_sec": 0.0325,
+    "total_attempts": 15007,
+    "attempts_per_sec": 462396.52,
+    "avg_crack_time_ms": 0.0017,
+    "max_crack_time_ms": 0.0018,
+    "wordlist_size": 44685,
+    "stopped_early": true,
+    "notes": "Base words: 993 | Rules: 13 | Est candidates: 44,685 | Top cracking rules: [_rule_identity=3, _rule_append_numbers=1] | Stopped early."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 57,
+      "plain_password": "baseball1",
+      "crack_time_ms": 0.0017,
+      "attempt_number": 8715
+    },
+    {
+      "record_id": 17,
+      "plain_password": "sunshine",
+      "crack_time_ms": 0.0018,
+      "attempt_number": 11252
+    },
+    {
+      "record_id": 73,
+      "plain_password": "princess",
+      "crack_time_ms": 0.0017,
+      "attempt_number": 13713
+    },
+    {
+      "record_id": 49,
+      "plain_password": "football",
+      "crack_time_ms": 0.0017,
+      "attempt_number": 14474
+    }
+  ],
+  "total_cracked_full": 4
+}

@@ -1,0 +1,58 @@
+{
+  "run_id": "891eafea-d886-46d2-af71-5c45ed9aa751",
+  "timestamp": "2026-05-11T07:10:57.530362+00:00",
+  "attack_type": "hybrid",
+  "algorithm": "sha1",
+  "config": {
+    "max_attempts": 20000,
+    "timeout_sec": 20.0,
+    "target_limit": 30,
+    "target_count": 30
+  },
+  "results": {
+    "target_count": 30,
+    "cracked_count": 5,
+    "success_rate_pct": 16.67,
+    "total_time_sec": 0.147,
+    "total_attempts": 20000,
+    "attempts_per_sec": 136035.64,
+    "avg_crack_time_ms": 0.0055,
+    "max_crack_time_ms": 0.0087,
+    "wordlist_size": 44685,
+    "stopped_early": true,
+    "notes": "Base words: 993 | Rules: 13 | Est candidates: 44,685 | Top cracking rules: [_rule_identity=3, _rule_reverse=1, _rule_append_numbers=1] | Stopped early."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 164,
+      "plain_password": "654321",
+      "crack_time_ms": 0.0064,
+      "attempt_number": 2484
+    },
+    {
+      "record_id": 59,
+      "plain_password": "12345678",
+      "crack_time_ms": 0.0087,
+      "attempt_number": 2615
+    },
+    {
+      "record_id": 52,
+      "plain_password": "qwerty",
+      "crack_time_ms": 0.0042,
+      "attempt_number": 3763
+    },
+    {
+      "record_id": 94,
+      "plain_password": "qwerty123",
+      "crack_time_ms": 0.0042,
+      "attempt_number": 3876
+    },
+    {
+      "record_id": 157,
+      "plain_password": "letmein",
+      "crack_time_ms": 0.0042,
+      "attempt_number": 6069
+    }
+  ],
+  "total_cracked_full": 5
+}

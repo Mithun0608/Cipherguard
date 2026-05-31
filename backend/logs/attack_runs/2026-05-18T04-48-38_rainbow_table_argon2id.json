@@ -1,0 +1,27 @@
+{
+  "run_id": "1aa17687-79ba-45b7-9c55-d6693e88d3a5",
+  "timestamp": "2026-05-18T04:48:38.793686+00:00",
+  "attack_type": "rainbow_table",
+  "algorithm": "argon2id",
+  "config": {
+    "max_attempts": 500000,
+    "timeout_sec": 30.0,
+    "target_limit": 30,
+    "target_count": 15
+  },
+  "results": {
+    "target_count": 15,
+    "cracked_count": 0,
+    "success_rate_pct": 0.0,
+    "total_time_sec": 0.001,
+    "total_attempts": 0,
+    "attempts_per_sec": 0.0,
+    "avg_crack_time_ms": 0.0,
+    "max_crack_time_ms": 0.0,
+    "wordlist_size": 0,
+    "stopped_early": false,
+    "notes": "Rainbow table attack FAILED as expected against 'argon2id'. Per-password salting prevents precomputed lookup tables — each password has a unique salt, requiring a separate table per salt (computationally infeasible with 2^256 possible salts). This demonstrates WHY salting is a critical security defense."
+  },
+  "cracked_sample": [],
+  "total_cracked_full": 0
+}

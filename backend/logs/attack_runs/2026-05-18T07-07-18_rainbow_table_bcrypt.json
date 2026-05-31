@@ -1,0 +1,27 @@
+{
+  "run_id": "5c4d1589-7a65-4017-a2ce-d100a0c0adac",
+  "timestamp": "2026-05-18T07:07:18.840383+00:00",
+  "attack_type": "rainbow_table",
+  "algorithm": "bcrypt",
+  "config": {
+    "max_attempts": 500000,
+    "timeout_sec": 30.0,
+    "target_limit": 30,
+    "target_count": 30
+  },
+  "results": {
+    "target_count": 30,
+    "cracked_count": 0,
+    "success_rate_pct": 0.0,
+    "total_time_sec": 0.001,
+    "total_attempts": 0,
+    "attempts_per_sec": 0.0,
+    "avg_crack_time_ms": 0.0,
+    "max_crack_time_ms": 0.0,
+    "wordlist_size": 0,
+    "stopped_early": false,
+    "notes": "Rainbow table attack FAILED as expected against 'bcrypt'. Per-password salting prevents precomputed lookup tables — each password has a unique salt, requiring a separate table per salt (computationally infeasible with 2^256 possible salts). This demonstrates WHY salting is a critical security defense."
+  },
+  "cracked_sample": [],
+  "total_cracked_full": 0
+}

@@ -1,0 +1,118 @@
+{
+  "run_id": "e2412053-c70b-46a9-8656-577f4f829520",
+  "timestamp": "2026-05-10T20:09:33.832358+00:00",
+  "attack_type": "rainbow_table",
+  "algorithm": "md5",
+  "config": {
+    "benchmark": true,
+    "target_limit": 20,
+    "max_attempts": 15000,
+    "timeout_sec": 12.0
+  },
+  "results": {
+    "target_count": 20,
+    "cracked_count": 15,
+    "success_rate_pct": 75.0,
+    "total_time_sec": 0.0118,
+    "total_attempts": 20,
+    "attempts_per_sec": 1697.25,
+    "avg_crack_time_ms": 0.0012,
+    "max_crack_time_ms": 0.0018,
+    "wordlist_size": 89,
+    "stopped_early": false,
+    "notes": "Table built in 1.2 ms | 89 precomputed hashes | Lookup is O(1) — instant per hash."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 5,
+      "plain_password": "dog12345",
+      "crack_time_ms": 0.0009,
+      "attempt_number": 2
+    },
+    {
+      "record_id": 9,
+      "plain_password": "music123",
+      "crack_time_ms": 0.0013,
+      "attempt_number": 3
+    },
+    {
+      "record_id": 13,
+      "plain_password": "access",
+      "crack_time_ms": 0.0011,
+      "attempt_number": 4
+    },
+    {
+      "record_id": 17,
+      "plain_password": "Jane#doe456",
+      "crack_time_ms": 0.0009,
+      "attempt_number": 5
+    },
+    {
+      "record_id": 25,
+      "plain_password": "winter2024",
+      "crack_time_ms": 0.0018,
+      "attempt_number": 7
+    },
+    {
+      "record_id": 29,
+      "plain_password": "000000",
+      "crack_time_ms": 0.0015,
+      "attempt_number": 8
+    },
+    {
+      "record_id": 33,
+      "plain_password": "1234",
+      "crack_time_ms": 0.0014,
+      "attempt_number": 9
+    },
+    {
+      "record_id": 37,
+      "plain_password": "fortnite1",
+      "crack_time_ms": 0.0009,
+      "attempt_number": 10
+    },
+    {
+      "record_id": 41,
+      "plain_password": "login",
+      "crack_time_ms": 0.0009,
+      "attempt_number": 11
+    },
+    {
+      "record_id": 45,
+      "plain_password": "starwars1",
+      "crack_time_ms": 0.0015,
+      "attempt_number": 12
+    },
+    {
+      "record_id": 53,
+      "plain_password": "password1",
+      "crack_time_ms": 0.0007,
+      "attempt_number": 14
+    },
+    {
+      "record_id": 57,
+      "plain_password": "Bob%123!!",
+      "crack_time_ms": 0.0013,
+      "attempt_number": 15
+    },
+    {
+      "record_id": 61,
+      "plain_password": "sunshine1",
+      "crack_time_ms": 0.0011,
+      "attempt_number": 16
+    },
+    {
+      "record_id": 69,
+      "plain_password": "master",
+      "crack_time_ms": 0.001,
+      "attempt_number": 18
+    },
+    {
+      "record_id": 77,
+      "plain_password": "orange123",
+      "crack_time_ms": 0.0012,
+      "attempt_number": 20
+    }
+  ],
+  "total_cracked_full": 15
+}

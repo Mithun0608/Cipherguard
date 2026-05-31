@@ -1,0 +1,64 @@
+{
+  "run_id": "84a61a49-44aa-4c25-9f35-e5ca9b0ce5e2",
+  "timestamp": "2026-05-10T21:08:18.193721+00:00",
+  "attack_type": "hybrid",
+  "algorithm": "salted_sha256",
+  "config": {
+    "benchmark": true,
+    "target_limit": 20,
+    "max_attempts": 15000,
+    "timeout_sec": 12.0
+  },
+  "results": {
+    "target_count": 20,
+    "cracked_count": 6,
+    "success_rate_pct": 30.0,
+    "total_time_sec": 0.0846,
+    "total_attempts": 15005,
+    "attempts_per_sec": 177351.49,
+    "avg_crack_time_ms": 0.0035,
+    "max_crack_time_ms": 0.0054,
+    "wordlist_size": 44685,
+    "stopped_early": true,
+    "notes": "Base words: 993 | Rules: 13 | Est candidates: 44,685 | Top cracking rules: [_rule_identity=5, _rule_append_numbers=1] | Stopped early."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 32,
+      "plain_password": "letmein",
+      "crack_time_ms": 0.0028,
+      "attempt_number": 4328
+    },
+    {
+      "record_id": 52,
+      "plain_password": "1234567",
+      "crack_time_ms": 0.0022,
+      "attempt_number": 6024
+    },
+    {
+      "record_id": 16,
+      "plain_password": "iloveyou",
+      "crack_time_ms": 0.0049,
+      "attempt_number": 9131
+    },
+    {
+      "record_id": 64,
+      "plain_password": "sunshine1",
+      "crack_time_ms": 0.0045,
+      "attempt_number": 10722
+    },
+    {
+      "record_id": 36,
+      "plain_password": "ashley",
+      "crack_time_ms": 0.0054,
+      "attempt_number": 11405
+    },
+    {
+      "record_id": 20,
+      "plain_password": "princess",
+      "crack_time_ms": 0.0015,
+      "attempt_number": 12768
+    }
+  ],
+  "total_cracked_full": 6
+}

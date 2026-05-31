@@ -1,0 +1,52 @@
+{
+  "run_id": "7cc963e9-3abd-44d3-b094-066510ef9790",
+  "timestamp": "2026-05-20T07:44:21.401419+00:00",
+  "attack_type": "hybrid",
+  "algorithm": "sha1",
+  "config": {
+    "benchmark": true,
+    "target_limit": 20,
+    "max_attempts": 15000,
+    "timeout_sec": 12.0
+  },
+  "results": {
+    "target_count": 20,
+    "cracked_count": 4,
+    "success_rate_pct": 20.0,
+    "total_time_sec": 0.0634,
+    "total_attempts": 15006,
+    "attempts_per_sec": 236817.19,
+    "avg_crack_time_ms": 0.0031,
+    "max_crack_time_ms": 0.0034,
+    "wordlist_size": 44685,
+    "stopped_early": true,
+    "notes": "Base words: 993 | Rules: 13 | Est candidates: 44,685 | Top cracking rules: [_rule_identity=3, _rule_leet_basic=1] | Stopped early."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 46,
+      "plain_password": "passw0rd",
+      "crack_time_ms": 0.0034,
+      "attempt_number": 492
+    },
+    {
+      "record_id": 6,
+      "plain_password": "letmein",
+      "crack_time_ms": 0.0031,
+      "attempt_number": 4131
+    },
+    {
+      "record_id": 70,
+      "plain_password": "baseball",
+      "crack_time_ms": 0.003,
+      "attempt_number": 8052
+    },
+    {
+      "record_id": 22,
+      "plain_password": "sunshine",
+      "crack_time_ms": 0.003,
+      "attempt_number": 10354
+    }
+  ],
+  "total_cracked_full": 4
+}

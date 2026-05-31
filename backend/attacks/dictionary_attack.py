@@ -286,6 +286,10 @@ class DictionaryAttack(BaseAttack):
                 if total_attempts >= max_attempts:
                     stopped_early = True
                     break
+                elapsed_inner = time.perf_counter() - attack_start
+                if elapsed_inner >= timeout_sec:
+                    stopped_early = True
+                    break
 
         total_time = time.perf_counter() - attack_start
 

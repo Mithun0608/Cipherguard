@@ -1,0 +1,22 @@
+{
+  "run_id": "abc12345-test",
+  "timestamp": "2026-05-31T08:10:52.516615+00:00",
+  "attack_type": "dictionary",
+  "algorithm": "md5",
+  "config": {},
+  "results": {
+    "target_count": 5,
+    "cracked_count": 3,
+    "success_rate_pct": 60.0,
+    "total_time_sec": 1.0,
+    "total_attempts": 100,
+    "attempts_per_sec": 100.0,
+    "avg_crack_time_ms": 0.0,
+    "max_crack_time_ms": 0.0,
+    "wordlist_size": 0,
+    "stopped_early": false,
+    "notes": ""
+  },
+  "cracked_sample": [],
+  "total_cracked_full": 0
+}

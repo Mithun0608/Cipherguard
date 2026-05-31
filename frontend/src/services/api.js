@@ -32,6 +32,11 @@ export const runAttack       = (data) => api.post('/run-attack', data)
 export const getAttackResults= (params) => api.get('/attack-results', { params })
 export const getAttackLogs   = (limit=20) => api.get('/attack-logs', { params: { limit } })
 
+// ── Custom Password Attack ────────────────────────────────────
+// POST → creates in-memory session, returns { attack_id }
+// Stream URL → /api/v1/custom-stream-attack/{attack_id}/stream (EventSource)
+export const createCustomAttack = (data) => api.post('/custom-stream-attack', data)
+
 // ── Security Score ────────────────────────────────────────────
 export const getSecurityScore = () => api.get('/security-score')
 

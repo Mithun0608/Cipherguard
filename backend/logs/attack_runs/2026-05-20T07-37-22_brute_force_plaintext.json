@@ -1,0 +1,148 @@
+{
+  "run_id": "5d656107-fd28-4bb2-8740-0ee19ebd9d6e",
+  "timestamp": "2026-05-20T07:37:22.592289+00:00",
+  "attack_type": "brute_force",
+  "algorithm": "plaintext",
+  "config": {
+    "max_attempts": 500000,
+    "timeout_sec": 30.0,
+    "target_limit": 30,
+    "target_count": 30
+  },
+  "results": {
+    "target_count": 30,
+    "cracked_count": 30,
+    "success_rate_pct": 100.0,
+    "total_time_sec": 0.001,
+    "total_attempts": 30,
+    "attempts_per_sec": 30000.0,
+    "avg_crack_time_ms": 0.001,
+    "max_crack_time_ms": 0.001,
+    "wordlist_size": 0,
+    "stopped_early": false,
+    "notes": "INSTANTLY COMPROMISED: Plaintext passwords require zero cracking effort. Direct database read exposes every password immediately. Plaintext storage provides zero security protection. 100% of accounts compromised upon any database breach."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 1,
+      "plain_password": "P4$$w0rd!Complex#42",
+      "crack_time_ms": 0.001,
+      "attempt_number": 1
+    },
+    {
+      "record_id": 8,
+      "plain_password": "letmein",
+      "crack_time_ms": 0.001,
+      "attempt_number": 2
+    },
+    {
+      "record_id": 15,
+      "plain_password": "ImpossibleToGuess!99#",
+      "crack_time_ms": 0.001,
+      "attempt_number": 3
+    },
+    {
+      "record_id": 22,
+      "plain_password": "Cr4ckThis@IfYouCan#!!",
+      "crack_time_ms": 0.001,
+      "attempt_number": 4
+    },
+    {
+      "record_id": 29,
+      "plain_password": "ninja",
+      "crack_time_ms": 0.001,
+      "attempt_number": 5
+    },
+    {
+      "record_id": 36,
+      "plain_password": "sunshine",
+      "crack_time_ms": 0.001,
+      "attempt_number": 6
+    },
+    {
+      "record_id": 43,
+      "plain_password": "Ranger9$",
+      "crack_time_ms": 0.001,
+      "attempt_number": 7
+    },
+    {
+      "record_id": 50,
+      "plain_password": "Secur1ty@Analysis#2024",
+      "crack_time_ms": 0.001,
+      "attempt_number": 8
+    },
+    {
+      "record_id": 57,
+      "plain_password": "Basketball4@",
+      "crack_time_ms": 0.001,
+      "attempt_number": 9
+    },
+    {
+      "record_id": 64,
+      "plain_password": "Batman2024!",
+      "crack_time_ms": 0.001,
+      "attempt_number": 10
+    },
+    {
+      "record_id": 71,
+      "plain_password": "000000",
+      "crack_time_ms": 0.001,
+      "attempt_number": 11
+    },
+    {
+      "record_id": 78,
+      "plain_password": "passw0rd",
+      "crack_time_ms": 0.001,
+      "attempt_number": 12
+    },
+    {
+      "record_id": 85,
+      "plain_password": "charlie1",
+      "crack_time_ms": 0.001,
+      "attempt_number": 13
+    },
+    {
+      "record_id": 92,
+      "plain_password": "QwErTy!@#$ZxCvBn99",
+      "crack_time_ms": 0.001,
+      "attempt_number": 14
+    },
+    {
+      "record_id": 99,
+      "plain_password": "hello123",
+      "crack_time_ms": 0.001,
+      "attempt_number": 15
+    },
+    {
+      "record_id": 106,
+      "plain_password": "AlgorithmTest!$3cur3#",
+      "crack_time_ms": 0.001,
+      "attempt_number": 16
+    },
+    {
+      "record_id": 113,
+      "plain_password": "thomas1",
+      "crack_time_ms": 0.001,
+      "attempt_number": 17
+    },
+    {
+      "record_id": 120,
+      "plain_password": "baseball",
+      "crack_time_ms": 0.001,
+      "attempt_number": 18
+    },
+    {
+      "record_id": 127,
+      "plain_password": "L0ng&Str0ng!P4ssph4se",
+      "crack_time_ms": 0.001,
+      "attempt_number": 19
+    },
+    {
+      "record_id": 134,
+      "plain_password": "test",
+      "crack_time_ms": 0.001,
+      "attempt_number": 20
+    }
+  ],
+  "total_cracked_full": 30
+}

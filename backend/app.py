@@ -11,9 +11,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.database import engine, Base
 from backend.models import User, AttackResult, PasswordHash
-from backend.routes.hash_routes    import router as hash_router
-from backend.routes.attack_routes  import router as attack_router
-from backend.routes.stream_routes  import router as stream_router
+from backend.routes.hash_routes          import router as hash_router
+from backend.routes.attack_routes        import router as attack_router
+from backend.routes.stream_routes        import router as stream_router
+from backend.routes.custom_stream_routes import router as custom_stream_router
 
 # ---------------------------------------------------------------------------
 # Logging
@@ -52,7 +53,12 @@ app = FastAPI(
 # ---------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins     = ["*"],
+    allow_origins     = [
+        "http://localhost:5173",   # Vite dev server
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",   # CRA / alternative dev
+        "http://127.0.0.1:3000",
+    ],
     allow_credentials = True,
     allow_methods     = ["*"],
     allow_headers     = ["*"],
@@ -64,6 +70,7 @@ app.add_middleware(
 app.include_router(hash_router)
 app.include_router(attack_router)
 app.include_router(stream_router)
+app.include_router(custom_stream_router)
 
 # ---------------------------------------------------------------------------
 # Root / health
@@ -82,7 +89,11 @@ def read_root():
                           "/api/v1/algorithms", "/api/v1/hash-all", "/api/v1/generate-dataset"],
             "attacks"  : ["/api/v1/run-attack", "/api/v1/attack-results",
                           "/api/v1/security-score", "/api/v1/benchmark", "/api/v1/attack-logs"],
-            "streaming": ["/api/v1/stream-attack (SSE)"],
+            "streaming": [
+                "/api/v1/stream-attack (SSE)",
+                "/api/v1/custom-stream-attack (POST → session)",
+                "/api/v1/custom-stream-attack/{id}/stream (SSE)",
+            ],
         },
     }
 

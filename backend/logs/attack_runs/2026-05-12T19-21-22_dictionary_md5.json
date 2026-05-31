@@ -1,0 +1,148 @@
+{
+  "run_id": "a786c8ae-2484-41d5-8078-25ae3d77d745",
+  "timestamp": "2026-05-12T19:21:22.919067+00:00",
+  "attack_type": "dictionary",
+  "algorithm": "md5",
+  "config": {
+    "max_attempts": 500000,
+    "timeout_sec": 30.0,
+    "target_limit": 30,
+    "target_count": 30
+  },
+  "results": {
+    "target_count": 30,
+    "cracked_count": 30,
+    "success_rate_pct": 100.0,
+    "total_time_sec": 0.0092,
+    "total_attempts": 2214,
+    "attempts_per_sec": 239651.89,
+    "avg_crack_time_ms": 0.2971,
+    "max_crack_time_ms": 0.775,
+    "wordlist_size": 993,
+    "stopped_early": false,
+    "notes": "Wordlist size: 993. Exhausted wordlist."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 2,
+      "plain_password": "david1",
+      "crack_time_ms": 0.1142,
+      "attempt_number": 50
+    },
+    {
+      "record_id": 9,
+      "plain_password": "123456",
+      "crack_time_ms": 0.0043,
+      "attempt_number": 52
+    },
+    {
+      "record_id": 16,
+      "plain_password": "mypassword",
+      "crack_time_ms": 0.1042,
+      "attempt_number": 111
+    },
+    {
+      "record_id": 23,
+      "plain_password": "Dragon2024!",
+      "crack_time_ms": 0.1519,
+      "attempt_number": 202
+    },
+    {
+      "record_id": 30,
+      "plain_password": "robert1",
+      "crack_time_ms": 0.0999,
+      "attempt_number": 248
+    },
+    {
+      "record_id": 37,
+      "plain_password": "root",
+      "crack_time_ms": 0.0959,
+      "attempt_number": 277
+    },
+    {
+      "record_id": 44,
+      "plain_password": "march2023",
+      "crack_time_ms": 0.1897,
+      "attempt_number": 335
+    },
+    {
+      "record_id": 51,
+      "plain_password": "UltraComplex$Pass99#",
+      "crack_time_ms": 0.4518,
+      "attempt_number": 473
+    },
+    {
+      "record_id": 58,
+      "plain_password": "Soccer5$",
+      "crack_time_ms": 0.6766,
+      "attempt_number": 587
+    },
+    {
+      "record_id": 65,
+      "plain_password": "CoffeeTime1!",
+      "crack_time_ms": 0.7095,
+      "attempt_number": 690
+    },
+    {
+      "record_id": 72,
+      "plain_password": "james1",
+      "crack_time_ms": 0.3217,
+      "attempt_number": 739
+    },
+    {
+      "record_id": 79,
+      "plain_password": "Love4life#",
+      "crack_time_ms": 0.775,
+      "attempt_number": 859
+    },
+    {
+      "record_id": 86,
+      "plain_password": "CipherGuard!Str0ng#1",
+      "crack_time_ms": 0.6217,
+      "attempt_number": 1002
+    },
+    {
+      "record_id": 93,
+      "plain_password": "starwars1",
+      "crack_time_ms": 0.2816,
+      "attempt_number": 1069
+    },
+    {
+      "record_id": 100,
+      "plain_password": "superman",
+      "crack_time_ms": 0.1473,
+      "attempt_number": 1093
+    },
+    {
+      "record_id": 107,
+      "plain_password": "test",
+      "crack_time_ms": 0.1708,
+      "attempt_number": 1123
+    },
+    {
+      "record_id": 114,
+      "plain_password": "Falcon7#",
+      "crack_time_ms": 0.7402,
+      "attempt_number": 1208
+    },
+    {
+      "record_id": 121,
+      "plain_password": "zX3!cV6@bN9#mQ",
+      "crack_time_ms": 0.7244,
+      "attempt_number": 1337
+    },
+    {
+      "record_id": 128,
+      "plain_password": "football",
+      "crack_time_ms": 0.0312,
+      "attempt_number": 1355
+    },
+    {
+      "record_id": 135,
+      "plain_password": "donald",
+      "crack_time_ms": 0.0913,
+      "attempt_number": 1380
+    }
+  ],
+  "total_cracked_full": 30
+}

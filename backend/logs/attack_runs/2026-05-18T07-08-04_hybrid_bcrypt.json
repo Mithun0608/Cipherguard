@@ -1,0 +1,34 @@
+{
+  "run_id": "511a7804-efe5-4368-96ec-a1b766a42b4a",
+  "timestamp": "2026-05-18T07:08:04.665954+00:00",
+  "attack_type": "hybrid",
+  "algorithm": "bcrypt",
+  "config": {
+    "max_attempts": 500000,
+    "timeout_sec": 30.0,
+    "target_limit": 30,
+    "target_count": 30
+  },
+  "results": {
+    "target_count": 30,
+    "cracked_count": 1,
+    "success_rate_pct": 3.33,
+    "total_time_sec": 31.7539,
+    "total_attempts": 150,
+    "attempts_per_sec": 4.72,
+    "avg_crack_time_ms": 208.6018,
+    "max_crack_time_ms": 208.6018,
+    "wordlist_size": 44685,
+    "stopped_early": true,
+    "notes": "Base words: 993 | Rules: 13 | Est candidates: 44,685 | Top cracking rules: [_rule_append_numbers=1] | Stopped early."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 41,
+      "plain_password": "password123",
+      "crack_time_ms": 208.6018,
+      "attempt_number": 126
+    }
+  ],
+  "total_cracked_full": 1
+}

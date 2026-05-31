@@ -1,0 +1,148 @@
+{
+  "run_id": "9e4504d1-ce26-4e57-9be0-237b75f5ed0e",
+  "timestamp": "2026-05-10T21:04:51.936443+00:00",
+  "attack_type": "dictionary",
+  "algorithm": "plaintext",
+  "config": {
+    "max_attempts": 20000,
+    "timeout_sec": 20.0,
+    "target_limit": 30,
+    "target_count": 30
+  },
+  "results": {
+    "target_count": 30,
+    "cracked_count": 30,
+    "success_rate_pct": 100.0,
+    "total_time_sec": 0.0011,
+    "total_attempts": 2254,
+    "attempts_per_sec": 2111475.45,
+    "avg_crack_time_ms": 0.0195,
+    "max_crack_time_ms": 0.0403,
+    "wordlist_size": 993,
+    "stopped_early": false,
+    "notes": "Wordlist size: 993. Exhausted wordlist."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 1,
+      "plain_password": "pokemon1",
+      "crack_time_ms": 0.0336,
+      "attempt_number": 68
+    },
+    {
+      "record_id": 8,
+      "plain_password": "donald",
+      "crack_time_ms": 0.0058,
+      "attempt_number": 93
+    },
+    {
+      "record_id": 15,
+      "plain_password": "Admin2024!",
+      "crack_time_ms": 0.0221,
+      "attempt_number": 191
+    },
+    {
+      "record_id": 22,
+      "plain_password": "iloveyou",
+      "crack_time_ms": 0.0029,
+      "attempt_number": 203
+    },
+    {
+      "record_id": 29,
+      "plain_password": "Hj8&Kp3!Lm5@Nx",
+      "crack_time_ms": 0.0312,
+      "attempt_number": 330
+    },
+    {
+      "record_id": 36,
+      "plain_password": "Ranger9$",
+      "crack_time_ms": 0.0204,
+      "attempt_number": 414
+    },
+    {
+      "record_id": 43,
+      "plain_password": "Ungu3ss4bl3@P4ssw0rd",
+      "crack_time_ms": 0.0325,
+      "attempt_number": 548
+    },
+    {
+      "record_id": 50,
+      "plain_password": "monkey",
+      "crack_time_ms": 0.0021,
+      "attempt_number": 555
+    },
+    {
+      "record_id": 57,
+      "plain_password": "daniel1",
+      "crack_time_ms": 0.0119,
+      "attempt_number": 603
+    },
+    {
+      "record_id": 64,
+      "plain_password": "cat12345",
+      "crack_time_ms": 0.0189,
+      "attempt_number": 683
+    },
+    {
+      "record_id": 71,
+      "plain_password": "fish1234",
+      "crack_time_ms": 0.0214,
+      "attempt_number": 764
+    },
+    {
+      "record_id": 78,
+      "plain_password": "R7$tY2!wZ4#bN6@",
+      "crack_time_ms": 0.0341,
+      "attempt_number": 890
+    },
+    {
+      "record_id": 85,
+      "plain_password": "basketball1",
+      "crack_time_ms": 0.021,
+      "attempt_number": 967
+    },
+    {
+      "record_id": 92,
+      "plain_password": "soccer123",
+      "crack_time_ms": 0.0179,
+      "attempt_number": 1040
+    },
+    {
+      "record_id": 99,
+      "plain_password": "aS4$dF7@gH2!jK",
+      "crack_time_ms": 0.0328,
+      "attempt_number": 1170
+    },
+    {
+      "record_id": 106,
+      "plain_password": "L0ng&Str0ng!P4ssph4se",
+      "crack_time_ms": 0.0364,
+      "attempt_number": 1305
+    },
+    {
+      "record_id": 113,
+      "plain_password": "CoffeeTime1!",
+      "crack_time_ms": 0.0261,
+      "attempt_number": 1408
+    },
+    {
+      "record_id": 120,
+      "plain_password": "winter2024",
+      "crack_time_ms": 0.0136,
+      "attempt_number": 1460
+    },
+    {
+      "record_id": 127,
+      "plain_password": "football1",
+      "crack_time_ms": 0.0175,
+      "attempt_number": 1536
+    },
+    {
+      "record_id": 134,
+      "plain_password": "ashley",
+      "crack_time_ms": 0.0039,
+      "attempt_number": 1551
+    }
+  ],
+  "total_cracked_full": 30
+}

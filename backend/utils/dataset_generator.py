@@ -167,7 +167,7 @@ def _load_fallback_passwords(sample_size: int = 1000) -> list[str]:
     To reach ~1000 records, the corpus is repeated/augmented with
     variations so the dataset remains realistic.
     """
-    base = list(set(_FALLBACK_PASSWORDS))  # deduplicate
+    base = list(dict.fromkeys(_FALLBACK_PASSWORDS))  # deduplicate, preserve insertion order
     result: list[str] = []
 
     # Add base passwords

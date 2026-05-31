@@ -1,0 +1,46 @@
+{
+  "run_id": "6c988894-8abc-4fe9-af2f-0fb7ae425a54",
+  "timestamp": "2026-05-10T20:04:28.253598+00:00",
+  "attack_type": "dictionary",
+  "algorithm": "argon2id",
+  "config": {
+    "max_attempts": 20000,
+    "timeout_sec": 20.0,
+    "target_limit": 30,
+    "target_count": 30
+  },
+  "results": {
+    "target_count": 30,
+    "cracked_count": 3,
+    "success_rate_pct": 10.0,
+    "total_time_sec": 21.0837,
+    "total_attempts": 257,
+    "attempts_per_sec": 12.19,
+    "avg_crack_time_ms": 4579.326,
+    "max_crack_time_ms": 5392.7333,
+    "wordlist_size": 89,
+    "stopped_early": true,
+    "notes": "Wordlist size: 89. Stopped early (limit/timeout)."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 14,
+      "plain_password": "dog12345",
+      "crack_time_ms": 5392.7333,
+      "attempt_number": 155
+    },
+    {
+      "record_id": 21,
+      "plain_password": "music123",
+      "crack_time_ms": 5148.0231,
+      "attempt_number": 218
+    },
+    {
+      "record_id": 28,
+      "plain_password": "access",
+      "crack_time_ms": 3197.2215,
+      "attempt_number": 257
+    }
+  ],
+  "total_cracked_full": 3
+}

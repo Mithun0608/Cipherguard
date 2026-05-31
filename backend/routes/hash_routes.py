@@ -234,6 +234,8 @@ def analyze_password_endpoint(payload: dict):
     password = payload.get("password", "")
     if not password:
         raise HTTPException(status_code=400, detail="'password' field is required.")
+    if not isinstance(password, str):
+        raise HTTPException(status_code=422, detail="'password' must be a string.")
 
     analysis = analyze_password(password)
 
@@ -270,6 +272,8 @@ def hash_all_algorithms(payload: dict):
     password = payload.get("password", "")
     if not password:
         raise HTTPException(status_code=400, detail="'password' field is required.")
+    if not isinstance(password, str):
+        raise HTTPException(status_code=422, detail="'password' must be a string.")
 
     pepper = payload.get("pepper") or os.getenv("PEPPER")
     results = {}

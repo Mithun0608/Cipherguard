@@ -1,0 +1,46 @@
+{
+  "run_id": "99d54d21-96e7-4766-be0f-5a3d7601ffac",
+  "timestamp": "2026-05-10T20:09:38.885974+00:00",
+  "attack_type": "hybrid",
+  "algorithm": "salted_sha256",
+  "config": {
+    "benchmark": true,
+    "target_limit": 20,
+    "max_attempts": 15000,
+    "timeout_sec": 12.0
+  },
+  "results": {
+    "target_count": 20,
+    "cracked_count": 3,
+    "success_rate_pct": 15.0,
+    "total_time_sec": 0.055,
+    "total_attempts": 15005,
+    "attempts_per_sec": 272896.58,
+    "avg_crack_time_ms": 0.0034,
+    "max_crack_time_ms": 0.0046,
+    "wordlist_size": 4005,
+    "stopped_early": true,
+    "notes": "Base words: 89 | Rules: 13 | Est candidates: 4,005 | Top cracking rules: [_rule_append_numbers=2, _rule_identity=1] | Stopped early."
+  },
+  "cracked_sample": [
+    {
+      "record_id": 56,
+      "plain_password": "password1",
+      "crack_time_ms": 0.0046,
+      "attempt_number": 54
+    },
+    {
+      "record_id": 72,
+      "plain_password": "master",
+      "crack_time_ms": 0.0027,
+      "attempt_number": 9957
+    },
+    {
+      "record_id": 64,
+      "plain_password": "sunshine1",
+      "crack_time_ms": 0.0028,
+      "attempt_number": 10820
+    }
+  ],
+  "total_cracked_full": 3
+}
